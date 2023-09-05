@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+
+    p{
+      margin-left: 4%;
+      margin-right: 4%;
+      font-size: large;
+      font-family: cursive;
+    }
+    
+    h1 {
+      text-align: center;
+      margin: 30px 0;
+      color: #007BFF;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #b3d8f2;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.1); 
+    }
+
+    .navbar.fixed-top {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-nav .nav-item {
+        margin-right: 15px; 
+    }    
+    
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Bore Dog NFTs</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'gallery' %}">Gallery</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'stats' %}">Stats</a>
+                </li>
+                <li class="nav-item dropdown"> 
+                  <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="galleryDropdown">
+                    <a class="dropdown-item" href="https://twitter.com/Bdognfts" target="_blank" style="text-decoration: none;color: inherit;"><b>Twitter</b></a>
+                    <a class="dropdown-item" href="https://www.instagram.com/boredogofficial/" target="_blank" style="text-decoration: none;color: inherit;"><b>Instagram</b></a>
+                    <a class="dropdown-item" href="https://opensea.io/collection/bore-dog" target="_blank" style="text-decoration: none;color: inherit;"><b>Opensea</b></a>
+                    <a class="dropdown-item" href="https://polygonscan.com/token/0x070f62778e939927ef99d330e590165f176fdf16" target="_blank" style="text-decoration: none;color: inherit;"><b>Polygonscan</b></a>
+                    <a class="dropdown-item" href="{% url 'terms' %}" style="text-decoration: none;color: inherit;"><b>Terms & Conditions</b></a>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <button id="connect-button" class="btn btn-secondary mb-2"></button>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+
+  <input type="hidden" id="current_owner" value="{{ current_owner }}">
+  <form id="history-form" action="{% url 'save_history' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="history-f" id="history-f">
+    <button type="submit" style="display: none;"></button>
+  </form>
+
+      
+    <h1 style="text-align: center; padding-top: 50px;">Celebrating Art and Unity: Introducing Bore Dog's Pixel NFTs</h1>
+    <p>A Captivating Collection of 1050 Unique Pixelated NFTs on the Polygon Network.
+    Each NFT Boasts a Palette of Backgrounds, Adorned with Hats and Expressive Mouths. 
+    With {{ count }} Proud Owners bore Dog is a creative and innovative collection that 
+    blends pixelated art with unique combinations of traits resulting in visually striking 
+    and one-of-a-kind NFTs.</p>
+    <p>Bore Dog is not just a collection it's a vibrant and inclusive community of 
+    NFT enthusiasts, artists, and collectors who actively participate in shaping the future
+    direction of the project</p>
+
+    <h1 style="text-align: center;">Decentralized Delights: Bore Dog NFTs and Digital Ownership</h1>
+    <P>Proof of Ownership: Each Bore Dog NFT is stored securely on the Polygon blockchain, providing
+    verifiable proof of ownership and ensuring the integrity of the collection.</P>
+    <p>Art as a Storyteller: Each Bore Dog NFT is a visual storyteller, capturing moments of emotion 
+    and expression within the pixelated art, allowing collectors to weave their narratives around 
+    these unique characters.</p>
+    <p>Algorithmic Generative Art: Bore Dog leverages advanced algorithms to generate an endless array of 
+    pixelated art pieces,ensuring that no two NFTs are ever identical, fostering a sense of individuality
+    for every collector. </p>
+    <p>Decentralized Ownership: Bore Dog embraces the decentralized ethos of blockchain, empowering owners
+    with true ownership of their NFTs, enabling them to showcase, trade, or sell their digital assets at will.
+    </p>
+    <p>Expressive Emoticons: Each Bore Dog's mouth is thoughtfully crafted with a range of expressive emoticons,
+    from heartwarming smiles to mischievous grins, allowing owners to convey emotions through their NFTs.</p>
+    <p>Digital Pet Companions: Bore Dogs are more than just NFTs; they serve as digital companions,
+    providing comfort and delight to their owners.</p>
+    <p>Digital DNA: Each Bore Dog NFT possesses a unique digital DNA, consisting of metadata and attributes
+    that make it truly one-of-a-kind, fostering a deep connection between the NFT and its owner.</p>
+    <p>Emotional Resonance: The carefully designed facial expressions and interactions of Bore Dog NFTs
+    evoke emotions, resonating with collectors on a personal level, sparking joy, nostalgia, and empathy.</p>
+
+    <h1 style="text-align: center;">Beyond Visuals: Bore Dog's Evolution through Collective Efforts</h1>
+    <p>
+    Thriving Community: The Bore Dog NFT collection boasts a vibrant and active community of collectors,
+    artists, and enthusiasts who passionately engage with the unique pixelated art.</p>
+    <p>Expanding Collector Base: With {{ count }} owners, the Bore Dog collection has quickly captured
+    the hearts of NFT enthusiasts worldwide, creating a diverse and widespread network of collectors.</p>
+    <p>Active Trading Marketplace: The high level of activity of the collection in marketplaces
+    reflects the desirability and demand for these pixel-perfect NFTs, fostering a dynamic ecosystem of 
+    buying and selling.</p>
+    <p>Rarity and Scarcity: The limited supply of 1050 unique Bore Dog NFTs ensures that each digital
+    collectible holds significant value, driving collectors to actively pursue and trade for these items.</p>
+    <p>NFTs as Digital Assets: The Bore Dog NFTs go beyond mere visual art pieces; they serve as tangible
+    digital assets that collectors can proudly showcase, own, and trade on the blockchain, providing a sense
+    of digital ownership and value.</p>
+    <p>Owner's Distribution: There is equitable spread of ownership among collectors, showcasing the 
+    decentralized nature of the community.</p>
+    <p>Top Collectors: Recognizing and celebrating the top collectors <a href="{% url 'stats' %}" target="_blank" style="text-decoration: none;color: inherit;">
+    <b>(in stats page)</b></a> who hold a significant number of Bore Dog NFTs reinforces their commitment and 
+    dedication to the collection, further motivating others to engage and participate actively.</p>
+    <p>Collaborative Growth: Bore Dog's success is a testament to the collaborative efforts of artists, 
+    creators, and the community, working together to shape the evolution and growth of the collection.</p>
+    <p>Engaging Experiences: The collection's dynamic backgrounds, expressive emoticons, and evolving 
+    pixel art offer engaging and interactive experiences that captivate the imagination and emotions of 
+    collectors.</p>
+    <p>Transparent Data: The provided charts and statistics on the <a href="{% url 'stats' %}" target="_blank" style="text-decoration: none;color: inherit;">
+    <b>stats page</b></a> showcase the collection's transparency, providing a clear overview of its activity 
+    and ownership distribution for the entire community to access.</p>
+    </p>
+
+    <h1 style="text-align: center;">Ahead of the Curve: Exploring Growth Potential in Bore Dog NFTs</h1>
+    <p>
+    Early Stage Collection: As a nascent NFT collection, Bore Dog presents a golden opportunity for early 
+    adopters to be part of a groundbreaking project from its inception, with the potential for substantial 
+    growth as it gains popularity.</p>
+    <p>Affordable Prices: With the collection being at an early stage, Bore Dog NFTs are currently 
+    available at remarkably affordable prices, making it accessible for a wide range of collectors 
+    and investors to participate.</p>
+    <p>On the Path of Progress: Bore Dog, has the potential to evolve and gain recognition over time. Early 
+    participants in this journey can witness the growth and development of the collection as it gains momentum.</p>
+    <p>Limited Edition: With only 1050 items available in the entire collection, each Bore Dog NFT 
+    is a scarce and exclusive digital collectible, adding intrinsic value and rarity to the assets 
+    held by their owners.</p>
+    <p>Versatile Trading: Bore Dog NFTs can serve as a versatile trading asset, offering opportunities 
+    for short-term flips or long-term holds, depending on individual investment strategies and market trends.</p>
+    <p>Early Advantage: With the combination of affordable prices and limited availability, owning Bore Dog NFTs 
+    before they gain widespread recognition offers collectors the chance to appreciate the uniqueness of these 
+    assets within the NFT space.</p>
+    <p>Unlocking Creative Potential: Bore Dog's distinctive pixelated art and limited availability offer a strong
+    foundation for enjoying the creative journey as the collection continues to evolve.</p>
+    <p>Community-Driven Growth: The active and engaged community surrounding the Bore Dog collection 
+    fosters positive sentiment and collaboration, contributing to increased interest and demand for the NFTs.</p>
+    <p>Collectible with a Story: Owning a Bore Dog NFT goes beyond mere ownership of digital art;
+    it becomes part of a unique story and journey within the burgeoning world of blockchain-based collectibles.
+    </p>
+    
+    <h1 style="text-align: center;">Unity in Diversity: Exploring delights in Bore Dog's Traits</h1>
+    <p>A Whimsical Tale of Emotions: Enter the enchanting world of Bore Dog NFTs, where each background, 
+    hat, and mouth weave a whimsical tale of emotions. From the cheerful "xmas" hat that spreads holiday 
+    joy to the mischievous "naughty" mouth with a sly grin, every trait offers a unique emotion that resonates 
+    with collectors' hearts.</p>
+    <p>Express Yourself: Bore Dog empowers collectors to express themselves through a myriad of emotions 
+    represented by the vast array of backgrounds, hats, and mouths. Whether you're feeling adventurous with 
+    the "pirate" hat or exuding elegance with the "gentle" mouth, there's a perfect combination to mirror 
+    your mood.</p>
+    <p>Embrace the Magic: Unleash your inner magician with the "magic hat_glass combo" or take a 
+    mysterious journey with the "black glasscap" hat. The collection brings a touch of magic, inspiring 
+    collectors to believe in endless possibilities and embark on enchanting adventures.</p>
+    <p>Timeless Classic: The "classic bubble" mouth and "cowboy classic" hat exude timeless charm and 
+    nostalgia, reminding collectors of cherished memories and simpler times. Bore Dog captures the 
+    essence of classic aesthetics and allows you to cherish those moments forever.</p>
+    <p>Unleash Your Wild Side: For the bold and daring collectors, Bore Dog offers the "skeleton hat" and 
+    "thug" mouth, expressing a fearless and edgy persona. Unleash your wild side and dare to be different 
+    with these distinctive traits.</p>
+    <p>Celebration of Diversity: The diverse range of backgrounds, hats, and mouths in the collection 
+    celebrates individuality and diversity. Each trait stands as a testament to the uniqueness of 
+    every collector, creating a sense of unity in diversity within the community.</p>
+    <p>A Splash of Color: The "rainbow waves" background and "rainbow droplets" mouth add a vibrant
+    burst of colors, symbolizing hope, optimism, and a celebration of life's kaleidoscope. Let the 
+    spectrum of colors inspire joy and positivity in your collection.</p>
+    <p>Adventure Awaits: With "vacation hat" and "sailor" mouth, Bore Dog beckons collectors to set sail on 
+    thrilling adventures. Let the collection be a constant reminder to seek new horizons and embrace the journey 
+    of life.</p>
+    <p>Nostalgic Nods: The "red velvet" hat and "blue droplet painting" background evoke nostalgic feelings, 
+    harking back to old-world charm and memories of bygone eras. Each trait becomes a nostalgic nod to 
+    cherished memories.</p>
+    <p>Whimsical Whispers: The "shout" mouth and "smoke" background embody whimsical excitement and mystery, 
+    as if secrets and magical whispers float through the pixels. Embrace the charm of whimsy and 
+    embrace the magic of Bore Dog.</p>
+    <p>A Symphony of Emotions: Just like a symphony, the collection blends emotions harmoniously, 
+    giving collectors the chance to create their emotional masterpiece. Each NFT becomes a note in 
+    the grand symphony of your heart.</p>
+    <p>Treasures of Feelings: Each trait within the Bore Dog collection becomes a treasure chest of 
+    feelings waiting to be discovered. Dive into the depths of emotions and find the NFT that resonates
+    with the emotions you hold close to your heart.</p>
+
+    <h1 style="text-align: center;">Art of Emotion: Bore Dog's Canvas of Feelings and Nuance</h1>
+    <p>
+    Capturing Moments: Just like a photograph captures a fleeting moment, each Bore Dog NFT captures a unique 
+    emotion frozen in time. Own a piece of digital art that encapsulates the essence of a specific emotion, 
+    allowing you to relive that feeling whenever you gaze upon it.</p>
+    <p>Emotive Artistry: The pixel-perfect artistry of Bore Dog's backgrounds, hats, and mouths showcases the 
+    depth and nuance of emotions. Each stroke of the brush and pixel placement tells a story, expressing feelings 
+    in an art form that transcends traditional boundaries.</p>
+    <p>Wear Your Emotions: Express yourself through your NFT collection by choosing the perfect combination of 
+    backgrounds, hats, and mouths that resonate with your innermost emotions. Let your digital art collection be 
+    an extension of your emotions and personality.</p>
+    <p>Immersive Empathy: As you explore the diverse range of Bore Dog traits, you'll find yourself immersed in 
+    the emotions they convey. Whether it's the "shy smile" mouth or the "fire drops" background, these NFTs have 
+    the power to evoke empathy and forge connections.</p>
+    <p>Emotional Time Travel: Step into a time-traveling journey with Bore Dog's unique backgrounds, capturing emotions 
+    from different eras and cultures. Each NFT becomes a portal to experience emotions across time, adding a touch of 
+    nostalgia and wonder to your collection.</p>
+    <p>Rarity with Heart: The scarcity of the 1050 Bore Dog NFTs makes each one a treasure to cherish. Owning a limited 
+    edition NFT becomes a deeply personal and heartfelt connection to the collection's story and the community that surrounds 
+    it.</p>
+    <p>Shared Emotional Language: Across cultures and borders, emotions are a universal language that connects us all. 
+    Bore Dog's emotional traits transcend barriers, uniting collectors from diverse backgrounds in a shared celebration 
+    of feelings.</p>
+    <p>Emotional Connection, Tangible Asset: Bore Dog NFTs go beyond being just digital art; they become a tangible 
+    representation of the emotional connections formed between collectors, making them true digital artifacts of the 
+    heart.</p>
+    <p>Future Emotional Heirlooms: As the Bore Dog collection grows and evolves, each NFT becomes a potential emotional 
+    heirloom that can be passed down through generations, carrying stories and sentiments that endure with time.</p>
+    <p>The Joy of Discovery: Exploring the vast array of Bore Dog traits becomes a journey of self-discovery and emotional 
+    introspection. Each new NFT adds a layer of depth to your collection, representing different facets of your emotional landscape.</p>
+    <p>Emotional Investment: Beyond the monetary value, owning a Bore Dog NFT becomes an emotional investment—an investment in 
+    the moments, memories, and emotions that the collection brings into your life.</p>
+    <p>Embrace the Emotion of Possibility: As the Bore Dog collection unfolds its creative roadmap, each planned event and 
+    collaboration becomes an invitation to embrace the emotion of endless possibility, forging a bond between collectors and 
+    the collection's future.</p>
+
+    <h1 style="text-align: center;">NFT Tales: Bore Dog NFTs in Collectors' Stories</h1>
+    <p>Heartfelt Testimonials: Current collectors are overjoyed with their Bore Dog NFTs, and their heartfelt testimonials reflect 
+    the emotional connection they have developed with their unique characters. Their stories inspire new collectors to join the 
+    community and experience the same joy and satisfaction.</p>
+    <p>Emotional Attachments: Collectors express how their Bore Dog NFTs have become a cherished part of their digital lives, evoking 
+    different emotions and serving as digital companions that brighten their days and inspire their creativity.</p>
+    <p>Exclusive Membership Benefits: As part of the Bore Dog community, collectors enjoy exclusive benefits, such as early access to 
+    upcoming drops, special events, and limited-time perks that enhance their emotional connection to the collection.</p>
+    <p>Emotional NFT Utility: While Bore Dog NFTs may not have conventional utility, collectors find value in the emotional utility of 
+    these digital artworks, as they inspire joy, creativity, and a sense of belonging in the ever-growing community.</p>
+
+    <h1 style="text-align: center;">From Pixels to Hearts: Bore Dog NFT Collection's Emotion-Rich Journey</h1>
+    <p>In conclusion, the Bore Dog NFT collection is not just a gathering of unique pixelated art pieces but a captivating journey into a realm of 
+    emotions and stories. Each background, hat, and mouth becomes a palette of feelings, allowing collectors to express themselves and embrace their 
+    diverse emotions. The collection's scarcity, affordable pricing, and untapped potential make it a hidden gem, an investment opportunity that 
+    promises to bloom with time.</p>
+    <p>Through interactive storytelling, legendary tales, and testimonials from satisfied collectors, the about page showcases the heartfelt connections 
+    that current collectors have forged with their Bore Dog NFTs. While the collection currently doesn't offer traditional utility, the emotional 
+    utility it provides empowers collectors to discover joy, creativity, and a sense of belonging in the vibrant community.</p>
+    <p>Bore Dog NFTs transcend the boundaries of pixels, becoming emotional artifacts that capture fleeting moments, express unique personalities, 
+    and evoke empathy. This collection fosters a deep emotional connection among collectors, creating a community where emotions are shared, 
+    celebrated, and cherished.</p>
+    <p>In the realm of Bore Dog, artistry and emotion converge, leaving an indelible mark on the hearts of those who venture into this enchanting 
+    world. Embrace the adventure, explore the emotions, and become part of a tale that continues to unfold in the pixels of the Bore Dog NFT collection.</p>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script>
+        const historyForm = document.getElementById('history-form');
+        const historyAddress = document.getElementById('history-f');
+
+
+        const walletDataJSON_get = localStorage.getItem('walletData');
+        const walletData_get = JSON.parse(walletDataJSON_get);
+        if (!walletData_get || walletData_get.connected === false) {
+          document.getElementById('connect-button').textContent = `Connect`;
+        } else{
+          document.getElementById('connect-button').textContent = `Disconnect`;
+        }
+
+
+      document.addEventListener('DOMContentLoaded', () => {
+        (async function() {
+
+          document.getElementById("connect-button").addEventListener("click", connectMetamask);
+
+          async function connectMetamask() {
+            if (typeof ethereum !== "undefined") {
+                web3 = new Web3(ethereum);
+                try {
+                await ethereum.request({ method: "eth_requestAccounts" });
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask. Please try again.");
+                }
+            } else {
+                alert("Please install MetaMask.");
+            }
+
+            const accounts = await ethereum.enable();
+            const address = accounts[0];
+
+            const walletDataJSON_get = localStorage.getItem('walletData');
+            const walletData_get = JSON.parse(walletDataJSON_get);
+
+            if (!walletData_get || walletData_get.connected === false) {
+                try {
+                console.log("Connected to MetaMask. Address:", address);
+                historyAddress.value = address;
+                historyForm.submit();
+                alert("Connected to MetaMask!");
+                document.getElementById('connect-button').textContent = `Disconnect`;
+                const walletItemsInput = document.getElementById('current_owner');
+                const wallet_data = JSON.parse(walletItemsInput.value);
+                const keysArray = Object.keys(wallet_data);
+                const valuesArray = Object.values(wallet_data);
+
+                const targetValue = address;
+                walletKeys = [];
+                for (const key in wallet_data) {
+                    if (wallet_data[key] === targetValue) {
+                    walletKeys.push(parseInt(key, 10));
+                    }
+                }
+                const walletData = {
+                  wallet_address: address,
+                  connected: true,
+                  keys_: walletKeys
+                };
+                const walletDataJSON = JSON.stringify(walletData);
+                localStorage.setItem('walletData', walletDataJSON);
+
+                console.log("Keys with target value:", walletKeys);
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask.");
+                }
+                } else {
+                    const walletData = {
+                      wallet_address: address,
+                      connected: false
+                    };
+                    const walletDataJSON = JSON.stringify(walletData);
+                    localStorage.setItem('walletData', walletDataJSON);
+                    alert("Wallet disconnected!");
+                    document.getElementById('connect-button').textContent = `Connect`;
+                }            
+            }
+          }) ();
+        });
+    </script>
+</body>
+    
+</html>

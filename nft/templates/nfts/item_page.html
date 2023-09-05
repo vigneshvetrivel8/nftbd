@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Item</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>        
+
+        body {
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .nft-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            width: 35%;
+        }
+
+        .traits {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .trait-box {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 0 10px;
+        }
+
+        .content {
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .navbar {
+        background-color: rgba(255, 255, 255, 0.1); 
+        }
+
+        .navbar.fixed-top {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-nav .nav-item {
+            margin-right: 15px; 
+        }    
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Bore Dog NFTs</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'gallery' %}">Gallery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'stats' %}">Stats</a>
+                    </li>
+                    <li class="nav-item dropdown"> 
+                      <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        More
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="galleryDropdown">
+                        <a class="dropdown-item" href="https://twitter.com/Bdognfts" target="_blank" style="text-decoration: none;color: inherit;"><b>Twitter</b></a>
+                        <a class="dropdown-item" href="https://www.instagram.com/boredogofficial/" target="_blank" style="text-decoration: none;color: inherit;"><b>Instagram</b></a>
+                        <a class="dropdown-item" href="https://opensea.io/collection/bore-dog" target="_blank" style="text-decoration: none;color: inherit;"><b>Opensea</b></a>
+                        <a class="dropdown-item" href="https://polygonscan.com/token/0x070f62778e939927ef99d330e590165f176fdf16" target="_blank" style="text-decoration: none;color: inherit;"><b>Polygonscan</b></a>
+                        <a class="dropdown-item" href="{% url 'terms' %}" style="text-decoration: none;color: inherit;"><b>Terms & Conditions</b></a>
+                      </div>
+                    </li>
+                    <li class="nav-item">
+                      <button id="connect-button" class="btn btn-secondary mb-2"></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+      </nav>
+      <input type="hidden" id="current_owner" value="{{ current_owner }}">
+      <form id="history-form" action="{% url 'save_history' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="history-f" id="history-f">
+        <button type="submit" style="display: none;"></button>
+      </form>
+{% for n in nft_item %}
+    <div class="container" style="padding-top: 80px;">
+        <h1>{{ n.Name }}</h1>
+        <img class="nft-image" src="{{ n.ImageUrl }}" alt="NFT Image">
+
+        <div class="traits row text-center mb-4">
+            <div class="col-md-4">
+                <a href="/" id="filter-link-b">
+                    <div class="container">
+                        <div class="trait-box">
+                            <h4>Background</h4>
+                            <p>{{ n.Background }}</p>
+                            {% for background, count in background_percentage_dict.items %}
+                                {% if background == n.Background %}
+                                    <p>{{ count }}%</p>
+                                {% endif %}
+                            {% endfor %}
+                            {% for background, count in background_count_dict.items %}
+                                {% if background == n.Background %}
+                                    <p>({{ count|add:-1 }} more items share this trait)</p>
+                                {% endif %}
+                            {% endfor %}
+                            <form id="filter-form-b" action="{% url 'gallery' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="traitb" value="Backgrounds: {{ n.Background }}">
+                                <button type="submit" style="display: none;"></button>
+                            </form>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="/" id="filter-link-h">
+                    <div class="container">
+                        <div class="trait-box">
+                            <h4>Hat</h4>
+                            <p>{{ n.Hat }}</p>
+                            {% for hat, count in hat_percentage_dict.items %}
+                                {% if hat == n.Hat %}
+                                    <p>{{ count }}%</p>
+                                {% endif %}
+                            {% endfor %}
+                            {% for hat, count in hat_count_dict.items %}
+                                {% if hat == n.Hat %}
+                                    <p>({{ count|add:-1 }} more items share this trait)</p>
+                                {% endif %}
+                            {% endfor %}
+                            <form id="filter-form-h" action="{% url 'gallery' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="traith" value="Hats: {{ n.Hat }}">
+                                <button type="submit" style="display: none;"></button>
+                            </form>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="/" id="filter-link-m">
+                    <div class="container">
+                        <div class="trait-box">
+                            <h4>Mouth</h4>
+                            <p>{{ n.Mouth }}</p>
+                            {% for mouth, count in mouth_percentage_dict.items %}
+                                {% if mouth == n.Mouth %}
+                                    <p>{{ count }}%</p>
+                                {% endif %}
+                            {% endfor %}
+                            {% for mouth, count in mouth_count_dict.items %}
+                                {% if mouth == n.Mouth %}
+                                    <p>({{ count|add:-1 }} more items share this trait)</p>
+                                {% endif %}
+                            {% endfor %}
+                            <form id="filter-form-m" action="{% url 'gallery' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="traitm" value="Mouths: {{ n.Mouth }}">
+                                <button type="submit" style="display: none;"></button>
+                            </form>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+        </div>
+
+        <div class="content">
+            {% for t in transactions %}
+                {% if forloop.last %}
+                <p>Owned By: <a href="{% url 'owner_page' t.to_address %}" style="text-decoration: none;"><b>{{ t.to_address }}</b></a></p>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <h1>Transactions</h1>
+        <div class="table-responsive" style="overflow-x: auto;">
+            <table id="transaction-table" class="table table-bordered">
+                <tr>
+                    <th>S.No</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Activity</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+                {% for t in transactions reversed %}
+                    {% if t.transactions_hash in transaction_hashes %}
+                        <tr style="font-weight: bold;" class="bold-row">
+                    {% else %}
+                        <tr>
+                    {% endif %}
+                    <td><a href="https://polygonscan.com/tx/{{ t.transactions_hash }}" style="text-decoration: none;color: inherit;">{{ forloop.counter }}</a></td>
+                    <td><a href="https://polygonscan.com/tx/{{ t.transactions_hash }}" style="text-decoration: none;color: inherit;">{{ t.from_address|slice:"0:4" }}...{{ t.from_address|slice:"-4:" }}</a></td>
+                    <td><a href="https://polygonscan.com/tx/{{ t.transactions_hash }}" style="text-decoration: none;color: inherit;">{{ t.to_address|slice:"0:4" }}...{{ t.to_address|slice:"-4:" }}</a></td>                    
+                    {% if t.from_address == "0x0000000000000000000000000000000000000000" %}
+                        <td><a href="https://polygonscan.com/tx/{{ t.transactions_hash }}" style="text-decoration: none;color: inherit;">Mint</a></td>
+                    {% elif t.amount == 0.0 %}
+                        <td><a href="https://polygonscan.com/tx/{{ t.transactions_hash }}" style="text-decoration: none;color: inherit;">Transfer</a></td>
+                    {% else %}
+                        <td><a href="https://polygonscan.com/tx/{{ t.transactions_hash }}" style="text-decoration: none;color: inherit;">Sale</a></td>
+                    {% endif %}
+                    <td><a href="https://polygonscan.com/tx/{{ t.transactions_hash }}" style="text-decoration: none;color: inherit;">{{ t.amount }}</a></td>
+                    <td style="white-space: nowrap;"><a href="https://polygonscan.com/tx/{{ t.transactions_hash }}" style="text-decoration: none;color: inherit;">{{ t.time }}</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <p id="message" style="font-size: smaller;"></p>
+        <p style="font-size: smaller;">*Click on any row to view details of that transaction.</p>
+        <h1>Sales Graph:</h1>
+        {% if amounts %}
+            <canvas id="myChart"></canvas>
+            <p id="graph_multi" style="font-size: smaller;">*There may be few instances where there was a multiple sale in a single transaction
+                in which this item was involved and average price of an item during that transaction may be represented.
+                You may click on the bars in the graph to know the accurate sale value of this item on that
+                transaction.</p>
+        {% else %}
+            <p id="graph_sales" style="font-size: smaller;">No sales activity for this item so far.</p>
+            <canvas id="myChart"></canvas>
+        {% endif %}
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script type="text/javascript">
+        const historyForm = document.getElementById('history-form');
+        const historyAddress = document.getElementById('history-f');
+
+
+        const walletDataJSON_get = localStorage.getItem('walletData');
+        const walletData_get = JSON.parse(walletDataJSON_get);
+        if (!walletData_get || walletData_get.connected === false) {
+          document.getElementById('connect-button').textContent = `Connect`;
+        } else{
+          document.getElementById('connect-button').textContent = `Disconnect`;
+        }
+
+        const table = document.getElementById('transaction-table');
+        const rows = table.getElementsByTagName('tr');
+        let boldRowExists = false;
+
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].classList.contains('bold-row')) {
+                boldRowExists = true;
+                break;
+            }
+        }
+
+        if (boldRowExists) {
+            const message = document.getElementById('message');
+            message.textContent = 'Row in bold indicates multiple sale in single transaction where this NFT was a part.';
+        }
+
+        const rows_all = document.querySelectorAll('#transaction-table tr');
+
+        rows_all.forEach(row => {
+            row.addEventListener('click', () => {
+                const link = row.querySelector('a');
+                if (link) {
+                    var transactionHash = link.getAttribute('href');
+                    window.location.href = transactionHash;
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterLinkb = document.getElementById('filter-link-b');
+            const filterFormb = document.getElementById('filter-form-b');
+            const filterLinkh = document.getElementById('filter-link-h');
+            const filterFormh = document.getElementById('filter-form-h');
+            const filterLinkm = document.getElementById('filter-link-m');
+            const filterFormm = document.getElementById('filter-form-m');
+
+
+            filterLinkb.addEventListener('click', (event) => {
+                event.preventDefault();
+                filterFormb.submit();
+            });
+
+            filterLinkh.addEventListener('click', (event) => {
+                event.preventDefault();
+                filterFormh.submit();
+            });
+
+            filterLinkm.addEventListener('click', (event) => {
+                event.preventDefault();
+                filterFormm.submit();
+            });
+
+            (async function() {
+
+                document.getElementById("connect-button").addEventListener("click", connectMetamask);
+
+                async function connectMetamask() {
+                if (typeof ethereum !== "undefined") {
+                    web3 = new Web3(ethereum);
+                    try {
+                    await ethereum.request({ method: "eth_requestAccounts" });
+                    } catch (error) {
+                    console.error(error);
+                    alert("Error connecting to MetaMask. Please try again.");
+                    }
+                } else {
+                    alert("Please install MetaMask.");
+                }
+
+                const accounts = await ethereum.enable();
+                const address = accounts[0];
+
+                const walletDataJSON_get = localStorage.getItem('walletData');
+                const walletData_get = JSON.parse(walletDataJSON_get);
+
+                if (!walletData_get || walletData_get.connected === false) {
+                    try {
+                    console.log("Connected to MetaMask. Address:", address);
+                    historyAddress.value = address;
+                    historyForm.submit();
+                    alert("Connected to MetaMask!");
+                    document.getElementById('connect-button').textContent = `Disconnect`;
+                    const walletItemsInput = document.getElementById('current_owner');
+                    const wallet_data = JSON.parse(walletItemsInput.value);
+                    const keysArray = Object.keys(wallet_data);
+                    const valuesArray = Object.values(wallet_data);
+
+                    const targetValue = address;
+                    walletKeys = [];
+                    for (const key in wallet_data) {
+                        if (wallet_data[key] === targetValue) {
+                        walletKeys.push(parseInt(key, 10));
+                        }
+                    }
+                    const walletData = {
+                        wallet_address: address,
+                        connected: true,
+                        keys_: walletKeys
+                    };
+                    const walletDataJSON = JSON.stringify(walletData);
+                    localStorage.setItem('walletData', walletDataJSON);
+
+                    console.log("Keys with target value:", walletKeys);
+                    } catch (error) {
+                    console.error(error);
+                    alert("Error connecting to MetaMask.");
+                    }
+                    } else {
+                        const walletData = {
+                            wallet_address: address,
+                            connected: false
+                        };
+                        const walletDataJSON = JSON.stringify(walletData);
+                        localStorage.setItem('walletData', walletDataJSON);
+                        alert("Wallet disconnected!");
+                        document.getElementById('connect-button').textContent = `Connect`;
+                    }            
+                }
+                }) ();
+        });
+
+                
+        var amounts = JSON.parse('{{ amounts }}');
+            var transactionHashes_sales = '{{ transaction_hashes_of_sales|safe|addslashes }}';
+            var labelsdata = [];
+            for (var i = 0; i < amounts.length; i++) {
+            labelsdata.push('sales' + (i + 1));
+            }
+
+            var data = {
+            labels: labelsdata,
+            datasets: [{
+                label: 'Sales(In Matic)',
+                data: amounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+            };
+
+            var regex = /'([^']+)'/g;
+            var transactionHashes = [];
+            var match;
+
+            while ((match = regex.exec(transactionHashes_sales)) !== null) {
+            transactionHashes.push(match[1]);
+            }
+
+            var options = {
+                responsive: true,
+                scales: {
+                y: {
+                    beginAtZero: true
+                }
+                },
+                onClick: function(event, elements) {
+                if (elements && elements.length > 0) {
+                    var index = elements[0].index;
+                    
+                    var transactionHash = transactionHashes[index];
+                    if (transactionHash) {
+                    var url = 'https://polygonscan.com/tx/' + transactionHash;
+                    window.open(url, '_blank');
+                    }
+                }
+                }
+            }
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: options
+            });
+
+    </script>
+{% endfor %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

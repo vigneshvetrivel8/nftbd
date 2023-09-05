@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner's Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .info-box {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-top: 20px;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        text-align: center;
+        width: 100%;
+    }
+
+    @media(min-width:640px) {
+        .item-container img{
+            height: 230px;
+        }
+    }
+
+    @media (min-width: 480px) and (max-width:639px) {
+        .item-container img{
+            height: 230px;
+        }
+    }
+
+    @media (min-width: 448px) and (max-width: 480px) {
+        .info p {
+            font-size: small;
+        }
+        .item-container img{
+            height: 200px;
+        }
+        .btn-container-small-screen button{
+            font-size: small;
+        }
+    }
+
+    @media (min-width: 376px) and (max-width: 447px) {
+        .info p {
+            font-size: x-small;
+        }
+        .item-container img{
+            height: 185px;
+        }
+        .btn-container-small-screen button{
+            font-size: x-small;
+        }
+    }
+
+    @media(max-width: 375px) {
+        .info p {
+            font-size: xx-small;
+        }
+        .item-container img{
+            height: 185px;
+        }
+        .btn-container-small-screen button{
+            font-size: xx-small;
+        }
+    }
+
+    @media(max-width: 340px) {
+        .info-box {
+            width: 500%;
+        }
+    }
+
+    @media (min-width: 608px) {
+        .btn-container {
+            display: flex;
+        }
+        .btn-container-small-screen {
+            display: none;
+        }
+    }
+
+    @media (max-width: 607px) {
+        .btn-container-small-screen {
+            display: flex;
+        }
+        .btn-container {
+            display: none;
+        }
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+
+    .nft-card {
+      width: calc(25% - 20px);
+      margin: 5px;
+    }
+
+    .separator {
+      width: 100%;
+      text-align: center;
+    }
+
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.1); 
+    }
+
+    .navbar.fixed-top {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-nav .nav-item {
+        margin-right: 15px; 
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Bore Dog NFTs</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'gallery' %}">Gallery</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'stats' %}">Stats</a>
+                </li>
+                <li class="nav-item dropdown"> 
+                  <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="galleryDropdown">
+                    <a class="dropdown-item" href="https://twitter.com/Bdognfts" target="_blank" style="text-decoration: none;color: inherit;"><b>Twitter</b></a>
+                    <a class="dropdown-item" href="https://www.instagram.com/boredogofficial/" target="_blank" style="text-decoration: none;color: inherit;"><b>Instagram</b></a>
+                    <a class="dropdown-item" href="https://opensea.io/collection/bore-dog" target="_blank" style="text-decoration: none;color: inherit;"><b>Opensea</b></a>
+                    <a class="dropdown-item" href="https://polygonscan.com/token/0x070f62778e939927ef99d330e590165f176fdf16" target="_blank" style="text-decoration: none;color: inherit;"><b>Polygonscan</b></a>
+                    <a class="dropdown-item" href="{% url 'terms' %}" style="text-decoration: none;color: inherit;"><b>Terms & Conditions</b></a>              
+                  </div>
+                </li>
+                <li class="nav-item">
+                    <button id="connect-button" class="btn btn-secondary mb-2"></button>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+  <input type="hidden" id="current_owner" value="{{ current_owner }}">
+  <form id="history-form" action="{% url 'save_history' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="history-f" id="history-f">
+    <button type="submit" style="display: none;"></button>
+  </form>
+  <input type="hidden" id="rarity" value="{{ rarity }}">
+  <input type="hidden" id="activity" value="{{ activity }}">
+  <div class="d-flex justify-content-center align-items-center p-4" style="width: 100%;">
+    <div class="text-center">
+      <h1 style="padding-top: 40px;">Account Details</h1>
+      <h3>{{ address|slice:"0:15" }}...{{ address|slice:"-6:" }}</h3>
+    </div>
+  </div>
+  
+  <div class="d-flex justify-content-between align-items-center p-4">
+    <h5 id="item-count" class="mb-0">Owned : {{ count }}</h5>
+    <a href="https://opensea.io/{{ address }}" target="_blank"><button class="btn btn-primary me-3">Opensea</button></a>
+    <a href="https://polygonscan.com/address/{{ address }}" target="_blank"><button class="btn btn-primary me-3">Polygonscan</button></a>
+  </div>
+  
+  <div class="text-center"> 
+    <h1>NFT's Owned</h1>
+  </div>
+  <hr class="separator">
+
+  <div class="container-fluid">
+    <main class="gallery">
+      {% for n in nfts %}        
+        <div class="info-box">
+            <div class="text-center" style="width: 100%">
+                <h1>{{ n.Name }}</h1>
+            </div>
+            <div class="horizontal-container" style="display: flex; justify-content: space-between; width: 100%;">
+                <div class="item-container">
+                    <a id="anchor-{{ n.Edition }}" href="{% url 'item' n.Edition %}" style="text-decoration: none;color:inherit;">
+                        <div class="nft-card type{{ n.Type }}" data-edition="{{ n.Edition }}" data-background="{{ n.Background }}"
+                        data-hat="{{ n.Hat }}" data-mouth="{{ n.Mouth }}">
+                        <img src="{{ n.ImageUrl }}" alt="NFT Image" style="width: auto; padding: auto;">
+                        </div>
+                    </a>
+                </div>
+                <div class="info">
+                    <p><b>Edition: </b>{{ n.Edition }}</p>
+                    <p><b>Background: </b>{{ n.Background }}</p>
+                    <p><b>Hat: </b>{{ n.Hat }}</p>
+                    <p><b>Mouth: </b>{{ n.Mouth }}</p>
+                    <p><b>Rarity Rank: </b><span id="rank-{{ n.Edition }}"></span></p>
+                    <p><b>No.of Activities: </b><span id="activity-{{ n.Edition }}"></span></p>
+                </div>
+                <div class="btn-container" style="flex-direction: column; justify-content: space-between;">
+                    <a href="{% url 'item' n.Edition %}" style="text-decoration: none;color: inherit;">
+                        <button class="btn btn-primary me-3">Webpage</button>
+                    </a>
+                    <a href="https://opensea.io/assets/matic/0x070f62778e939927ef99d330e590165f176fdf16/{{ n.Edition }}" target="_blank" style="text-decoration: none;color: inherit;">
+                        <button class="btn btn-primary me-3">Opensea</button>
+                    </a>
+                    <a href="https://polygonscan.com/nft/0x070f62778e939927ef99d330e590165f176fdf16/{{ n.Edition }}" target="_blank" style="text-decoration: none;color: inherit;">
+                        <button class="btn btn-primary me-3">Polygonscan</button>
+                    </a>
+                </div>
+            </div>
+
+            <div class="btn-container-small-screen" style="width: 100%; justify-content: space-between; padding-top: 15px;">
+                <a href="{% url 'item' n.Edition %}" target="_blank" style="text-decoration: none;color: inherit;">
+                    <button class="btn btn-primary me-3">Webpage</button>
+                </a>
+                <a href="https://opensea.io/assets/matic/0x070f62778e939927ef99d330e590165f176fdf16/{{ n.Edition }}" target="_blank" style="text-decoration: none;color: inherit;">
+                    <button class="btn btn-primary me-3">Opensea</button>
+                </a>
+                <a href="https://polygonscan.com/nft/0x070f62778e939927ef99d330e590165f176fdf16/{{ n.Edition }}" target="_blank" style="text-decoration: none;color: inherit;">
+                    <button class="btn btn-primary me-3">Polygonscan</button>
+                </a>
+            </div>
+        </div>
+      {% endfor %}
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+<script>
+    const historyForm = document.getElementById('history-form');
+    const historyAddress = document.getElementById('history-f');
+
+    const walletDataJSON_get = localStorage.getItem('walletData');
+    const walletData_get = JSON.parse(walletDataJSON_get);
+    if (!walletData_get || walletData_get.connected === false) {
+        document.getElementById('connect-button').textContent = `Connect`;
+    } else{
+        document.getElementById('connect-button').textContent = `Disconnect`;
+    }
+
+    const rarityDataInput = document.getElementById('rarity');
+    const rarityDataString = rarityDataInput.value;
+    const rarity_data = JSON.parse(rarityDataString);
+    const rarityKeys = rarityDataString.match(/"(\d+)":/g).map(match => match.slice(1, -2));
+
+    function findIndexByEdition_2(editionNumber) {
+        for (let i = 0; i < rarityKeys.length; i++) {
+            if (rarityKeys[i] === editionNumber) {
+            return i;
+            }
+        }
+        return -1; 
+    }
+
+    const nftElements = document.querySelectorAll('.nft-card');
+
+    const activityDataInput = document.getElementById('activity');
+    const activityDataString = activityDataInput.value;
+    const activity_data = JSON.parse(activityDataString);
+  
+    nftElements.forEach(nftElement => {
+      const editionNumber = nftElement.dataset.edition;
+      const rankElement = document.getElementById(editionNumber);
+      const rankElement_2 = document.getElementById('rank-'+editionNumber)
+      const index = findIndexByEdition_2(editionNumber);
+      rankElement_2.textContent = (index+1)+('/1050');
+
+      const activityCount = activity_data[editionNumber] || 0;
+
+      const activityElement = document.getElementById('activity-' + editionNumber);
+      console.log(activityElement);
+      activityElement.textContent = activityCount;
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        (async function() {
+
+          document.getElementById("connect-button").addEventListener("click", connectMetamask);
+
+          async function connectMetamask() {
+            if (typeof ethereum !== "undefined") {
+                web3 = new Web3(ethereum);
+                try {
+                await ethereum.request({ method: "eth_requestAccounts" });
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask. Please try again.");
+                }
+            } else {
+                alert("Please install MetaMask.");
+            }
+
+            const accounts = await ethereum.enable();
+            const address = accounts[0];
+
+            const walletDataJSON_get = localStorage.getItem('walletData');
+            const walletData_get = JSON.parse(walletDataJSON_get);
+
+            if (!walletData_get || walletData_get.connected === false) {
+                try {
+                console.log("Connected to MetaMask. Address:", address);
+                historyAddress.value = address;
+                historyForm.submit();
+                alert("Connected to MetaMask!");
+                document.getElementById('connect-button').textContent = `Disconnect`;
+                const walletItemsInput = document.getElementById('current_owner');
+                const wallet_data = JSON.parse(walletItemsInput.value);
+                const keysArray = Object.keys(wallet_data);
+                const valuesArray = Object.values(wallet_data);
+
+                const targetValue = address;
+                walletKeys = [];
+                for (const key in wallet_data) {
+                    if (wallet_data[key] === targetValue) {
+                    walletKeys.push(parseInt(key, 10));
+                    }
+                }
+                const walletData = {
+                  wallet_address: address,
+                  connected: true,
+                  keys_: walletKeys
+                };
+                const walletDataJSON = JSON.stringify(walletData);
+                localStorage.setItem('walletData', walletDataJSON);
+
+                console.log("Keys with target value:", walletKeys);
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask.");
+                }
+                } else {
+                    const walletData = {
+                      wallet_address: address,
+                      connected: false
+                    };
+                    const walletDataJSON = JSON.stringify(walletData);
+                    localStorage.setItem('walletData', walletDataJSON);
+                    alert("Wallet disconnected!");
+                    document.getElementById('connect-button').textContent = `Connect`;
+                }            
+            }
+          }) ();
+        });
+  </script>
+</html>

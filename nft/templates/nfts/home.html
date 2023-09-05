@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    h1 {
+      font-family: monospace;
+      font-size: 5vw;
+      text-align: center;
+      margin: 0;
+      color: #007BFF;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #a3a5f7;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.1); 
+    }
+
+    .navbar.fixed-top {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-nav .nav-item {
+        margin-right: 15px; 
+    }    
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Bore Dog NFTs</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'gallery' %}">Gallery</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'stats' %}">Stats</a>
+                </li>
+                <li class="nav-item dropdown"> 
+                  <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="galleryDropdown">
+                    <a class="dropdown-item" href="https://twitter.com/Bdognfts" target="_blank" style="text-decoration: none;color: inherit;"><b>Twitter</b></a>
+                    <a class="dropdown-item" href="https://www.instagram.com/boredogofficial/" target="_blank" style="text-decoration: none;color: inherit;"><b>Instagram</b></a>
+                    <a class="dropdown-item" href="https://opensea.io/collection/bore-dog" target="_blank" style="text-decoration: none;color: inherit;"><b>Opensea</b></a>
+                    <a class="dropdown-item" href="https://polygonscan.com/token/0x070f62778e939927ef99d330e590165f176fdf16" target="_blank" style="text-decoration: none;color: inherit;"><b>Polygonscan</b></a>
+                    <a class="dropdown-item" href="{% url 'terms' %}" style="text-decoration: none;color: inherit;"><b>Terms & Conditions</b></a>              
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <button id="connect-button" class="btn btn-secondary mb-2"></button>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+
+  <div style="padding-top: 25vh;" class="align-content">
+    <h1>Welcome to the </h1>
+    <h1>Pixelated Wonderland</h1>
+  </div>
+
+<div class="container" style="width: 40%;">
+  <div class="button-container d-flex justify-content-between">
+    <a href="{% url 'about' %}" style="text-decoration: none;color: inherit;">
+      <button class="btn btn-primary" style="font-size: 1vw; font-family: cursive;">Know More</button>
+    </a>
+    <a href="{% url 'gallery' %}" style="text-decoration: none;color: inherit;">
+      <button class="btn btn-primary" style="font-size: 1vw;">View Collection</button>
+    </a>
+  </div>
+</div>
+
+  <input type="hidden" id="current_owner" value="{{ current_owner }}">
+  <form id="history-form" action="{% url 'save_history' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="history-f" id="history-f">
+    <button type="submit" style="display: none;"></button>
+  </form>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+  <script>
+      const historyForm = document.getElementById('history-form');
+      const historyAddress = document.getElementById('history-f');
+
+
+      const walletDataJSON_get = localStorage.getItem('walletData');
+      const walletData_get = JSON.parse(walletDataJSON_get);
+      if (!walletData_get || walletData_get.connected === false) {
+        document.getElementById('connect-button').textContent = `Connect`;
+      } else{
+        document.getElementById('connect-button').textContent = `Disconnect`;
+      }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      (async function() {
+
+        document.getElementById("connect-button").addEventListener("click", connectMetamask);
+
+        async function connectMetamask() {
+          if (typeof ethereum !== "undefined") {
+              web3 = new Web3(ethereum);
+              try {
+              await ethereum.request({ method: "eth_requestAccounts" });
+              } catch (error) {
+              console.error(error);
+              alert("Error connecting to MetaMask. Please try again.");
+              }
+          } else {
+              alert("Please install MetaMask.");
+          }
+
+          const accounts = await ethereum.enable();
+          const address = accounts[0];
+
+          const walletDataJSON_get = localStorage.getItem('walletData');
+          const walletData_get = JSON.parse(walletDataJSON_get);
+
+          if (!walletData_get || walletData_get.connected === false) {
+              try {
+              console.log("Connected to MetaMask. Address:", address);
+              historyAddress.value = address;
+              historyForm.submit();
+              alert("Connected to MetaMask!");
+              document.getElementById('connect-button').textContent = `Disconnect`;
+              const walletItemsInput = document.getElementById('current_owner');
+              const wallet_data = JSON.parse(walletItemsInput.value);
+              const keysArray = Object.keys(wallet_data);
+              const valuesArray = Object.values(wallet_data);
+
+              const targetValue = address;
+              walletKeys = [];
+              for (const key in wallet_data) {
+                  if (wallet_data[key] === targetValue) {
+                  walletKeys.push(parseInt(key, 10));
+                  }
+              }
+              const walletData = {
+                wallet_address: address,
+                connected: true,
+                keys_: walletKeys
+              };
+              const walletDataJSON = JSON.stringify(walletData);
+              localStorage.setItem('walletData', walletDataJSON);
+
+              console.log("Keys with target value:", walletKeys);
+              } catch (error) {
+              console.error(error);
+              alert("Error connecting to MetaMask.");
+              }
+              } else {
+                  const walletData = {
+                    wallet_address: address,
+                    connected: false
+                  };
+                  const walletDataJSON = JSON.stringify(walletData);
+                  localStorage.setItem('walletData', walletDataJSON);
+                  alert("Wallet disconnected!");
+                  document.getElementById('connect-button').textContent = `Connect`;
+              }            
+          }
+        }) ();
+      });
+  </script>
+</body>
+</html>

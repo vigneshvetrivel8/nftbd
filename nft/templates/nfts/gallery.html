@@ -1,0 +1,1149 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'nft/styles.css' %}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Bore Dog NFTs</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'gallery' %}">Gallery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'stats' %}">Stats</a>
+                    </li>
+                    <li class="nav-item dropdown"> 
+                      <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        More
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="galleryDropdown">
+                        <a class="dropdown-item" href="https://twitter.com/Bdognfts" target="_blank" style="text-decoration: none;color: inherit;"><b>Twitter</b></a>
+                        <a class="dropdown-item" href="https://www.instagram.com/boredogofficial/" target="_blank" style="text-decoration: none;color: inherit;"><b>Instagram</b></a>
+                        <a class="dropdown-item" href="https://opensea.io/collection/bore-dog" target="_blank" style="text-decoration: none;color: inherit;"><b>Opensea</b></a>
+                        <a class="dropdown-item" href="https://polygonscan.com/token/0x070f62778e939927ef99d330e590165f176fdf16" target="_blank" style="text-decoration: none;color: inherit;"><b>Polygonscan</b></a>
+                        <a class="dropdown-item" href="{% url 'terms' %}" style="text-decoration: none;color: inherit;"><b>Terms & Conditions</b></a>              
+                      </div>
+                    </li>
+                    <li class="nav-item">
+                      <button id="connect-button" class="btn btn-secondary mb-2"></button>
+                  </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+  <input type="hidden" id="first-section-data" value="{{ first_section }}">
+  <input type="hidden" id="second-section-data" value="{{ second_section }}">
+  <input type="hidden" id="rarityData" value="{{ rarity }}">
+  <input type="hidden" id="current_owner" value="{{ current_owner }}">
+
+  <form id="history-form" action="{% url 'save_history' %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="history-f" id="history-f">
+      <button type="submit" style="display: none;"></button>
+  </form>
+
+    <aside class="filters bg-light p-4" id="filters-menu" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+        <h1 style="padding-top: 50px; display: flex; justify-content: center; align-items: center;">Menu</h1>
+        <nav class="navbar-collapse collapse flex-lg-column d-lg-block">
+            <div class="search-container mb-3">
+                <label for="editionSearch"><h4>Search:</h4></label>
+                <input type="text" id="editionSearch" placeholder="Enter edition number..." style="width: 200px;" class="form-control">
+            </div>
+
+        <h4 class="mb-3">Filter By:</h4>
+
+        <div class="filter-category mb-3">
+            <p class="filter-heading" onclick="toggleFilterOptions('background-options')" data-bs-toggle="collapse">Backgrounds:</p>
+            <div id="background-options" class="collapse filter-options">
+            {% for background in background_list %}
+            <label>
+                <input type="checkbox" class="background-checkbox" value="{{ background }}">
+                <span>{{ background }}</span>
+                <div id="background-count-dict" style="display: none;">
+                {{ background_count_dict|json_script:"background-count-data" }}
+                </div>
+            </label>
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="filter-category">
+            <p class="filter-heading" onclick="toggleFilterOptions('hat-options')" data-bs-toggle="collapse">Hats:</p>
+            <div id="hat-options" class="collapse filter-options">
+            {% for hat in hat_list %}
+            <label>
+                <input type="checkbox" class="hat-checkbox" value="{{ hat }}">
+                <span>{{ hat }}</span>
+                <div id="hat-count-dict" style="display: none;">
+                {{ hat_count_dict|json_script:"hat-count-data" }}
+                </div>
+            </label>
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="filter-category">
+            <p class="filter-heading" onclick="toggleFilterOptions('mouth-options')" data-bs-toggle="collapse">Mouths:</p>
+            <div id="mouth-options" class="collapse filter-options">
+            {% for mouth in mouth_list %}
+            <label>
+                <input type="checkbox" class="mouth-checkbox" value="{{ mouth }}">
+                <span>{{ mouth }}</span>
+                <div id="background-count-dict" style="display: none;">
+                {{ mouth_count_dict|json_script:"mouth-count-data" }}
+                </div>
+            </label>
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="selected-sort" style="padding-top: 15px;">
+            <input type="checkbox" id="walletItemsCheckbox" onchange="handleFilterChange()">
+            <label for="walletItemsCheckbox">My items</label>
+        </div>
+
+        <h4 style="padding-top: 15px;">Sort By:</h4>
+        <div>
+            <div class="selected-sort form-check mb-2">
+                <input type="checkbox" id="sortAscendingCheckbox" class="form-check-input">
+                <label for="sortAscendingCheckbox" class="form-check-label">Ascending</label>
+                </div>
+                <div class="form-check">
+                <input type="checkbox" id="sortRarityCheckbox" class="form-check-input">
+                <label for="sortRarityCheckbox" class="form-check-label">Rarity of Traits</label>
+            </div>
+        </div>
+
+        </nav>
+    </aside>
+
+    <main class="gallery p-4" id="main-content" style="background-color: #e6eaf0; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+        <div class="row custom-row">
+            <div class="col-md-12" id="section1">
+                <div class="d-flex justify-content-between">
+                    <h1>Gallery</h1>
+                    <h1 id="item-count"></h1>
+                </div>
+                <div style="display: flex; justify-content: space-between; width: 100%;">
+                    <button class="btn btn-secondary d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show" id="filters-toggle">
+                    Filters
+                    </button>
+                    <button id="shuffleButtonSmall" class="btn btn-primary mb-2">Shuffle</button>
+                </div>
+                <div class="selected-filters" style="display: flex; white-space: nowrap;">
+                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                        <p>Filters <span id="filter-count">0</span></p>
+                        <button id="shuffleButtonLarge" class="btn btn-primary mb-2">Shuffle</button>
+                    </div>                    
+                    <div class="dynamic-filters-container">
+                        <div id="dynamic-filters"></div>
+                    </div>
+                    <span id="clear-all" style="white-space: pre-line; display: none;margin-left: 10px;">Clear All Ⓧ</span>
+                </div>                
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col-md-12" id="section2">
+                {% for n in nfts %}
+                <a id="anchor-{{ n.Edition }}" href="{% url 'item' n.Edition %}" style="text-decoration: none;color:inherit">
+                    <div class="nft-card type{{ n.Type }}" data-edition="{{ n.Edition }}" data-background="{{ n.Background }}"
+                    data-hat="{{ n.Hat }}" data-mouth="{{ n.Mouth }}">
+                    <img src="{{ n.ImageUrl }}" alt="NFT Image">
+                    <h4 style="display: flex; flex-direction: column; justify-content: center; align-items: center;">Bore Dog</h4> 
+                    <p style="display: flex; flex-direction: column; justify-content: center; align-items: center;">No. {{ n.Edition }}</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </main>  
+  
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+  <script>
+      let shuffledOrder = [];
+      let walletKeys = [];
+      let wallet_connected = false;
+      let walletCheckbox = document.getElementById('walletItemsCheckbox');
+      let filterKeys = [];
+      const sortAscendingCheckbox = document.getElementById('sortAscendingCheckbox');
+      const sortRarityCheckbox = document.getElementById('sortRarityCheckbox');
+      const backgroundCheckboxes = document.getElementsByClassName("background-checkbox");
+      const hatCheckboxes = document.getElementsByClassName("hat-checkbox");
+      const mouthCheckboxes = document.getElementsByClassName("mouth-checkbox");
+      const searchInput = document.getElementById('editionSearch');
+      const searchValue = searchInput.value.trim();
+      const clearAll = document.getElementById('clear-all');
+      const filterCount = document.getElementById('filter-count');
+      const historyForm = document.getElementById('history-form');
+      const historyAddress = document.getElementById('history-f');
+      const shuffleButtonSmall = document.getElementById('shuffleButtonSmall');
+      const shuffleButtonLarge = document.getElementById('shuffleButtonLarge');      
+
+
+      function setAllCheckboxesFalse(checkboxes) {
+        for (let i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = false;
+        }
+      }
+
+      function addClickEventListenersToAnchors() {
+        const anchorTags = document.querySelectorAll('.gallery a');
+        anchorTags.forEach((anchor) => {
+          anchor.addEventListener('click', function (event) {
+            setAllCheckboxesFalse(backgroundCheckboxes);
+            setAllCheckboxesFalse(hatCheckboxes);
+            setAllCheckboxesFalse(mouthCheckboxes);
+            sortAscendingCheckbox.checked = false;
+            sortRarityCheckbox.checked = false;
+            walletCheckbox.checked = false;
+            count_update();
+            clearClearAll();
+          });
+        });
+      }
+
+
+      function count_update(){
+        const nftCards = document.getElementsByClassName('nft-card');
+        const anchorTags = document.querySelectorAll('.gallery a');
+        let visibleItemCount = 0;
+        for (let i = 0; i < nftCards.length; i++) {
+            if (nftCards[i].style.display !== 'none' && anchorTags[i].style.display !== 'none') {
+            visibleItemCount++;
+            }
+        }
+        if(visibleItemCount === 1049){
+          document.getElementById('item-count').textContent = `Count: 1050`;
+        } else {
+        document.getElementById('item-count').textContent = `Count: ${visibleItemCount}`;
+        }
+      }
+    
+      
+      function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+            count_update();
+        }
+
+
+    function selectCheckboxesBasedOnTraits(trait) {
+        if (trait) {
+        const filterCategory = trait.split(":")[0].trim();
+        const filterValue = trait.split(":")[1].trim();
+
+        switch (filterCategory) {
+            case "Backgrounds":
+            const backgroundCheckboxes = document.getElementsByClassName("background-checkbox");
+            for (let i = 0; i < backgroundCheckboxes.length; i++) {
+                if (backgroundCheckboxes[i].value === filterValue) {
+                backgroundCheckboxes[i].checked = true;
+                break;
+                }
+            }
+            break;
+
+            case "Hats":
+            const hatCheckboxes = document.getElementsByClassName("hat-checkbox");
+            for (let i = 0; i < hatCheckboxes.length; i++) {
+                if (hatCheckboxes[i].value === filterValue) {
+                hatCheckboxes[i].checked = true;
+                break;
+                }
+            }
+            break;
+
+            case "Mouths":
+            const mouthCheckboxes = document.getElementsByClassName("mouth-checkbox");
+            for (let i = 0; i < mouthCheckboxes.length; i++) {
+                if (mouthCheckboxes[i].value === filterValue) {
+                mouthCheckboxes[i].checked = true;
+                break;
+                }
+            }
+            break;
+
+            default:
+            // If the category is not recognized, do nothing
+            break;
+        }
+        }
+        count_update();
+    }
+
+    function toggleFilterOptions(filterId) {
+      const filterOptions = document.getElementById(filterId);
+      filterOptions.classList.toggle('show');
+      count_update();
+    }
+    
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const mainContent = document.getElementById("main-content");
+    const filtersNavbar = document.querySelector(".filters .navbar-collapse");
+    const filtersToggle = document.getElementById("filters-toggle");
+    const filtersMenu = document.getElementById('filters-menu');
+
+    filtersToggle.addEventListener("click", function () {
+        if (filtersNavbar.style.display === "none") {
+            filtersNavbar.style.display = "block";
+            mainContent.style.marginLeft = "220px"; 
+            filtersMenu.style.display = "block";
+            filtersMenu.style.width = "220px";
+            mainContent.style.width = "400%";
+        } else {
+            filtersNavbar.style.display = "none";
+            mainContent.style.marginLeft = "0";
+            filtersMenu.style.display = "none";
+            mainContent.style.width = "100%";
+        }
+    });
+
+    filtersNavbar.addEventListener("hide.bs.collapse", function () {
+        if (filtersToggle.classList.contains("active")) {
+            filtersToggle.classList.remove("active");
+        }
+        mainContent.style.marginLeft = "0";
+    });
+
+    filtersNavbar.addEventListener("show.bs.collapse", function () {
+        filtersToggle.classList.add("active");
+        mainContent.style.marginLeft = "220px"; 
+    });
+
+      const backgroundCheckboxes = document.getElementsByClassName('background-checkbox');
+      const hatCheckboxes = document.getElementsByClassName('hat-checkbox');
+      const mouthCheckboxes = document.getElementsByClassName('mouth-checkbox');
+      const nftCards = document.getElementsByClassName('nft-card');
+
+    const dynamicFiltersContainer = document.getElementById('dynamic-filters');
+    function addFilterElement(filterText) {
+        const filterElement = document.createElement('span');
+        filterElement.textContent = filterText;
+        filterElement.style.whiteSpace = 'pre-line';
+        filterElement.style.marginLeft = '10px';
+        filterElement.style.display = 'inline-flex';
+        dynamicFiltersContainer.appendChild(filterElement);
+
+        // Add click event listener to the new filter element
+        filterElement.addEventListener('click', handleFilterClick);
+    }
+      
+      for (let i = 0; i < backgroundCheckboxes.length; i++) {
+        backgroundCheckboxes[i].addEventListener('change', handleFilterChange);
+      }
+
+      for (let i = 0; i < hatCheckboxes.length; i++) {
+        hatCheckboxes[i].addEventListener('change', handleFilterChange);
+      }
+
+      for (let i = 0; i < mouthCheckboxes.length; i++) {
+        mouthCheckboxes[i].addEventListener('change', handleFilterChange);
+      }
+
+
+      function getSelectedValues(checkboxes) {
+        const selectedValues = [];
+
+        for (let i = 0; i < checkboxes.length; i++) {
+          const checkbox = checkboxes[i];
+
+          if (checkbox.checked) {
+            selectedValues.push(checkbox.value);
+          }
+        }
+        count_update();
+        return selectedValues;
+      }
+
+      function addXToSelectedFilters(selectedValues, filterElement) {
+        let filtersText = selectedValues.map(value => `${filterElement}: ${value} Ⓧ`).join('\n');
+        return filtersText;
+      }
+
+      function handleFilterChange() {
+        const selectedBackgrounds = getSelectedValues(backgroundCheckboxes);
+        const selectedHats = getSelectedValues(hatCheckboxes);
+        const selectedMouths = getSelectedValues(mouthCheckboxes);
+        const showWalletItems = walletCheckbox.checked;
+
+        const currentBackgroundElements= Array.from(dynamicFiltersContainer.children).filter(child => child.textContent.includes('Background:'));
+        const currentHatElements = Array.from(dynamicFiltersContainer.children).filter(child => child.textContent.includes('Hat:'));        
+        const currentMouthElements = Array.from(dynamicFiltersContainer.children).filter(child => child.textContent.includes('Mouth'));        
+
+        if (currentBackgroundElements){
+          currentBackgroundElements.forEach(element => {
+              dynamicFiltersContainer.removeChild(element);
+          });          
+        }
+
+        if (currentHatElements){
+          currentHatElements.forEach(element => {
+              dynamicFiltersContainer.removeChild(element);
+          });          
+        }
+
+        if (currentMouthElements){
+          currentMouthElements.forEach(element => {
+              dynamicFiltersContainer.removeChild(element);
+          });          
+        }
+
+        selectedBackgrounds.forEach(background => {
+            addFilterElement(`Background: ${background} Ⓧ`);
+        });
+
+        selectedHats.forEach(hat => {
+            addFilterElement(`Hat: ${hat} Ⓧ`);
+        });
+
+        selectedMouths.forEach(mouth => {
+            addFilterElement(`Mouth: ${mouth} Ⓧ`);
+        });
+
+        for (let i = 0; i < nftCards.length; i++) {
+          const nftCard = nftCards[i];
+          const nftBackground = nftCard.getAttribute('data-background');
+          const nftHat = nftCard.getAttribute('data-hat');
+          const nftMouth = nftCard.getAttribute('data-mouth');
+          let isVisible = true;
+
+          if (selectedBackgrounds.length > 0 && !selectedBackgrounds.includes(nftBackground)) {
+            isVisible = false;
+          }
+
+          if (selectedHats.length > 0 && !selectedHats.includes(nftHat)) {
+            isVisible = false;
+          }
+
+          if (selectedMouths.length > 0 && !selectedMouths.includes(nftMouth)) {
+            isVisible = false;
+          }
+
+          if (showWalletItems) {
+            const key = parseInt(nftCard.getAttribute('data-edition'), 10);
+            if(!walletData_get.keys_.includes(key)){
+              isVisible = false;
+            }
+          }
+
+          if (isVisible) {
+            nftCard.style.display = 'block';
+          } else {
+            nftCard.style.display = 'none';
+          }
+        }
+
+        let visibleItemCount = 0;
+        filterKeys = [];
+        for (let i = 0; i < nftCards.length; i++) {
+            if (nftCards[i].style.display !== 'none') {
+            visibleItemCount++;
+            filterKeys.push(parseInt(nftCards[i].getAttribute('data-edition'), 10));
+            }
+        }
+        if(visibleItemCount === 1049){
+          document.getElementById('item-count').textContent = `Count: 1050`;
+        } else {
+        document.getElementById('item-count').textContent = `Count: ${visibleItemCount}`;
+        }
+        clearAll.style.display = 'block';
+        count_update();
+        clearClearAll();
+        filter_count();
+      }
+    
+
+      for (let i = 0; i < backgroundCheckboxes.length; i++) {
+        backgroundCheckboxes[i].addEventListener('change', handleFilterChange);
+      }
+
+      var backgroundCountDict = JSON.parse(document.getElementById('background-count-data').textContent);
+
+      for (let i = 0; i < backgroundCheckboxes.length; i++) {
+        const backgroundCheckbox = backgroundCheckboxes[i];
+        const backgroundName = backgroundCheckbox.value;
+        const count = backgroundCountDict[backgroundName];
+        const label = backgroundCheckbox.parentNode;
+        const span = label.querySelector('span');
+        span.textContent = backgroundName + ' (' + count + ')';
+      }
+
+
+      for (let i = 0; i < hatCheckboxes.length; i++) {
+        hatCheckboxes[i].addEventListener('change', handleFilterChange);
+      }
+
+      var hatCountDict = JSON.parse(document.getElementById('hat-count-data').textContent);
+
+      for (let i = 0; i < hatCheckboxes.length; i++) {
+        const hatCheckbox = hatCheckboxes[i];
+        const hatName = hatCheckbox.value;
+        const count = hatCountDict[hatName];
+        const label = hatCheckbox.parentNode;
+        const span = label.querySelector('span');
+        span.textContent = hatName + ' (' + count + ')';
+      }
+
+      for (let i = 0; i < mouthCheckboxes.length; i++) {
+        mouthCheckboxes[i].addEventListener('change', handleFilterChange);
+      }
+
+      var mouthCountDict = JSON.parse(document.getElementById('mouth-count-data').textContent);
+
+      for (let i = 0; i < mouthCheckboxes.length; i++) {
+        const mouthCheckbox = mouthCheckboxes[i];
+        const mouthName = mouthCheckbox.value;
+        const count = mouthCountDict[mouthName];
+        const label = mouthCheckbox.parentNode;
+        const span = label.querySelector('span');
+        span.textContent = mouthName + ' (' + count + ')';
+      }
+
+
+      const trait = "{{ traits }}";
+      selectCheckboxesBasedOnTraits(trait);
+      // Show all NFT cards on initial page load
+      handleFilterChange();
+
+
+      const firstSectionDataInput = document.getElementById('first-section-data');
+        const secondSectionDataInput = document.getElementById('second-section-data');
+
+        const firstSectionData = JSON.parse(firstSectionDataInput.value);
+        const secondSectionData = JSON.parse(secondSectionDataInput.value);
+
+        const firstSectionKeys = Object.keys(firstSectionData);
+        const secondSectionKeys = Object.keys(secondSectionData);
+
+
+        function arrangeAnchorsByKeys(keys) {
+          const galleryContainer = document.querySelector('.gallery');
+          const anchorTags = Array.from(galleryContainer.querySelectorAll('a'));
+          const anchorMap = {};
+          anchorTags.forEach((anchor) => {
+              const key = parseInt(anchor.id.replace('anchor-', ''), 10);
+              anchorMap[key] = anchor;
+          });
+
+          keys.forEach((key) => {
+              const anchor = anchorMap[key];
+              galleryContainer.appendChild(anchor);
+          });
+          count_update();
+        }
+
+        function arrangeAnchorsByKeysspecial(keys) {
+          const galleryContainer = document.querySelector('.gallery');
+          const anchorTags = Array.from(galleryContainer.querySelectorAll('a'));
+          
+          anchorTags.forEach((anchor) => {
+            const key = parseInt(anchor.id.replace('anchor-', ''), 10);
+            if (keys.includes(key)) {
+              anchor.style.display = 'block';
+            } else {
+              anchor.style.display = 'none';
+            }
+          });
+          const commonElements = keys.filter((element) => filterKeys.includes(element));
+          const countCommonElements = commonElements.length;
+          
+          if(countCommonElements === 1049){
+            document.getElementById('item-count').textContent = `Count: 1050`;
+          } else {
+          document.getElementById('item-count').textContent = `Count: ${countCommonElements}`;
+          }
+          count_update();
+        }
+
+        function unhide_anchor_tags(){
+          const galleryContainer = document.querySelector('.gallery');
+          const anchorTags = galleryContainer.querySelectorAll('a');
+
+          anchorTags.forEach((anchor) => {
+            anchor.style.display = 'block';
+          })
+          count_update();
+        }
+
+        function shuffleAndArrangeAnchors() {
+            const shuffledFirstSectionKeys = shuffleArray(firstSectionKeys);
+            const shuffledSecondSectionKeys = shuffleArray(secondSectionKeys);
+
+            const shuffledOrder = shuffledFirstSectionKeys.concat(shuffledSecondSectionKeys);
+            localStorage.setItem('shuffledOrder', JSON.stringify(shuffledOrder));
+            arrangeAnchorsByKeys(shuffledOrder);
+            count_update();
+        }
+
+        function shuffleAnchorTags() {
+            const galleryContainer = document.querySelector('.gallery');
+            const anchorTags = Array.from(galleryContainer.querySelectorAll('a'));
+
+            for (let i = anchorTags.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            galleryContainer.insertBefore(anchorTags[j], anchorTags[i]);
+            }
+            count_update();
+        }
+
+        const shuffleButtonSmall = document.getElementById('shuffleButtonSmall');
+        shuffleButtonSmall.addEventListener('click', () => {
+          let visibleItemCount = 0;
+          for (let i = 0; i < nftCards.length; i++) {
+              if (nftCards[i].style.display !== 'none') {
+              visibleItemCount++;
+              }
+          }
+          if(visibleItemCount <= 240){
+            shuffleAnchorTags();
+          } else {
+            shuffleAndArrangeAnchors();
+          }
+          count_update();
+        });
+
+        const shuffleButtonLarge = document.getElementById('shuffleButtonLarge');
+        shuffleButtonLarge.addEventListener('click', () => {
+          let visibleItemCount = 0;
+          for (let i = 0; i < nftCards.length; i++) {
+              if (nftCards[i].style.display !== 'none') {
+              visibleItemCount++;
+              }
+          }
+          if(visibleItemCount <= 240){
+            shuffleAnchorTags();
+          } else {
+            shuffleAndArrangeAnchors();
+          }
+          count_update();
+        });
+
+
+        if(localStorage.getItem('shuffledOrder') === null){
+            shuffleButtonSmall.click();
+            shuffleButtonLarge.click();
+        }
+
+        // Function to sort the NFT cards by ascending order of keys
+        function sortAscending() {
+          const galleryContainer = document.querySelector('.gallery');
+          const anchorTags = Array.from(galleryContainer.querySelectorAll('a'));
+
+          const keys = anchorTags.map((anchor) => {
+            return parseInt(anchor.id.replace('anchor-', ''), 10);
+          });
+
+          keys.sort((a, b) => a - b);
+
+          arrangeAnchorsByKeys(keys);
+          count_update();
+        }
+
+        // Function to revert to the original order (using the storedShuffledOrder)
+        function revertToOriginalOrder() {
+          const storedShuffledOrder = localStorage.getItem('shuffledOrder');
+          if (storedShuffledOrder && storedShuffledOrder.trim() !== '') {
+            const parsedShuffledOrder = JSON.parse(storedShuffledOrder);
+            arrangeAnchorsByKeys(parsedShuffledOrder);
+            count_update();
+          }
+          count_update();
+        }
+        
+        sortAscendingCheckbox.addEventListener('change', function () {
+        const ascendingFilterElement = Array.from(dynamicFiltersContainer.children).find(child => child.textContent.includes('Sort By : Ascending Ⓧ'));        
+          if (this.checked) {
+            sortRarityCheckbox.checked = false;
+            sortAscending(); 
+            addFilterElement('Sort By : Ascending Ⓧ');
+            clearAll.style.display = 'block';
+          } else {
+            revertToOriginalOrder(); 
+            if (ascendingFilterElement) {
+               dynamicFiltersContainer.removeChild(ascendingFilterElement);
+            }
+            clearClearAll();
+          }
+          count_update();
+          filter_count();
+        });
+
+        const rarityDataInput= document.getElementById('rarityData');
+        const rarity_data= JSON.parse(rarityDataInput.value);
+        const rarity_data_2 = new Map(rarity_data);
+        const rarityKeys_2 = Array.from(rarity_data_2.keys());
+
+        sortRarityCheckbox.addEventListener('change', function () {
+        const rarityFilterElement = Array.from(dynamicFiltersContainer.children).find(child => child.textContent.includes('Sort By : Rarity of traits Ⓧ'));
+        if (this.checked) {
+            sortAscendingCheckbox.checked = false;
+            arrangeAnchorsByKeys(rarityKeys_2);
+            addFilterElement('Sort By : Rarity of traits Ⓧ');
+            clearAll.style.display = 'block';
+        } else {
+            revertToOriginalOrder(); 
+            if (rarityFilterElement) {
+               dynamicFiltersContainer.removeChild(rarityFilterElement);
+            }
+            clearClearAll();
+        }
+        count_update();
+        filter_count();
+        });
+
+        
+        (async function() {
+
+          document.getElementById("connect-button").addEventListener("click", connectMetamask);
+
+          async function connectMetamask() {
+            if (typeof ethereum !== "undefined") {
+                web3 = new Web3(ethereum);
+                try {
+                await ethereum.request({ method: "eth_requestAccounts" });
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask. Please try again.");
+                }
+            } else {
+                alert("Please install MetaMask.");
+            }
+            count_update();
+
+            const accounts = await ethereum.enable();
+            const address = accounts[0];
+
+            const walletDataJSON_get = localStorage.getItem('walletData');
+            const walletData_get = JSON.parse(walletDataJSON_get);
+
+            if (!walletData_get || walletData_get.connected === false) {
+                try {
+                historyAddress.value = address;
+                historyForm.submit();
+                alert("Connected to MetaMask!");
+                document.getElementById('connect-button').textContent = `Disconnect`;
+                const walletItemsInput = document.getElementById('current_owner');
+                const wallet_data = JSON.parse(walletItemsInput.value);
+                const keysArray = Object.keys(wallet_data);
+                const valuesArray = Object.values(wallet_data);
+
+                const targetValue = address;
+                walletKeys = [];
+                for (const key in wallet_data) {
+                    if (wallet_data[key] === targetValue) {
+                    walletKeys.push(parseInt(key, 10));
+                    }
+                }
+                const walletData = {
+                  wallet_address: address,
+                  connected: true,
+                  keys_: walletKeys
+                };
+                const walletDataJSON = JSON.stringify(walletData);
+                localStorage.setItem('walletData', walletDataJSON);
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask.");
+                }
+                } else {
+                    const walletData = {
+                      wallet_address: address,
+                      connected: false
+                    };
+                    const walletDataJSON = JSON.stringify(walletData);
+                    localStorage.setItem('walletData', walletDataJSON);
+                    alert("Wallet disconnected!");
+                    walletCheckbox.checked = false;
+                    document.getElementById('connect-button').textContent = `Connect`;
+                    const walletFilterElement = Array.from(dynamicFiltersContainer.children).find(child => child.textContent.includes('Content : My Items Ⓧ'));        
+                    if (walletFilterElement) {
+                      dynamicFiltersContainer.removeChild(walletFilterElement);
+                    }
+                    clearClearAll();
+                    unhide_anchor_tags();
+                    revertToOriginalOrder();
+                }            
+                count_update();               
+                filter_count();
+            }
+          }) ();
+
+          function performSearch_2(walletKeys, searchValue) {
+            const editionToSearch = parseInt(searchValue, 10);
+
+            for (let i = 0; i < nftCards.length; i++) {
+                const nftCard = nftCards[i];
+                const nftEdition = parseInt(nftCard.getAttribute('data-edition'), 10);
+                let isVisible = false;
+
+                if (nftEdition === editionToSearch) {
+                isVisible = walletKeys.includes(nftEdition);
+                }
+
+                if (isVisible) {
+                nftCard.style.display = 'block';
+                } else {
+                nftCard.style.display = 'none';
+                }
+            }
+          }
+
+          walletCheckbox.addEventListener('change', function () {
+          const searchValue = searchInput.value.trim();         
+          if (this.checked) {
+              const walletDataJSON_get = localStorage.getItem('walletData');
+              let walletData_get = JSON.parse(walletDataJSON_get);
+              if (!walletData_get || walletData_get.connected === false) {
+                alert("Connect wallet and click this box to view My items section!");
+                this.checked = false;
+                const walletFilterElement = Array.from(dynamicFiltersContainer.children).find(child => child.textContent.includes('Content : My Items Ⓧ'));        
+                if (walletFilterElement) {
+                  dynamicFiltersContainer.removeChild(walletFilterElement);
+                }
+              } else {
+                if(searchValue.length !== 0){
+                    performSearch_2(walletData_get.keys_, searchValue);                    
+                } else{
+                    arrangeAnchorsByKeysspecial(walletData_get.keys_);
+                }  
+                count_update();
+                addFilterElement('Content : My Items Ⓧ');
+                clearAll.style.display = 'block';
+                filter_count();
+              }
+          } else {
+            const walletFilterElement = Array.from(dynamicFiltersContainer.children).find(child => child.textContent.includes('Content : My Items Ⓧ'));        
+            if (walletFilterElement) {
+              dynamicFiltersContainer.removeChild(walletFilterElement);
+            }
+              unhide_anchor_tags();
+              revertToOriginalOrder(); 
+              handleFilterChange();
+              count_update();
+              filter_count();
+              if (searchValue.length !== 0) {
+                const editionToSearch = parseInt(searchValue, 10);
+                const galleryContainer = document.querySelector('.gallery');
+                const nftCards = galleryContainer.querySelectorAll('.nft-card');
+
+                let found = false;
+                nftCards.forEach((card) => {
+                    const key = parseInt(card.getAttribute('data-edition'), 10);
+                    if (key === editionToSearch) {
+                        if (walletCheckbox.checked) {
+                            // If wallet checkbox is checked, check if the item is in the wallet
+                            const inWallet = walletData_get.keys_.includes(key);
+                            if (inWallet) {
+                                card.closest('a').style.display = 'block';
+                                found = true;
+                            } else {
+                                card.closest('a').style.display = 'none';
+                            }
+                        } else {
+                            // If wallet checkbox is unchecked, show all matching items
+                            card.closest('a').style.display = 'block';
+                            found = true;
+                        }
+                    } else {
+                        card.closest('a').style.display = 'none';
+                    }
+                })
+
+                if (!found) {
+                    alert(`NFT with edition number ${editionToSearch} not found.`);
+                }
+              } else if (sortAscendingCheckbox.checked) {
+                  sortAscendingCheckbox.click();
+                  sortAscendingCheckbox.click();
+              } else if (sortRarityCheckbox.checked) {
+                  unhide_anchor_tags();
+                  sortRarityCheckbox.click();
+                  sortRarityCheckbox.click();
+              }
+              count_update();
+              clearClearAll();
+              filter_count();
+          }
+          });
+
+          const walletDataJSON_get = localStorage.getItem('walletData');
+          const walletData_get = JSON.parse(walletDataJSON_get);
+          if (!walletData_get || walletData_get.connected === false) {
+            document.getElementById('connect-button').textContent = `Connect`;
+          } else{
+            document.getElementById('connect-button').textContent = `Disconnect`;
+          }
+
+
+          const storedShuffledOrder = localStorage.getItem('shuffledOrder');
+          if (storedShuffledOrder && storedShuffledOrder.trim() !== '') {
+            const parsedShuffledOrder = JSON.parse(storedShuffledOrder);
+            arrangeAnchorsByKeys(parsedShuffledOrder);
+            count_update();
+          }
+
+          addClickEventListenersToAnchors();
+
+          const searchFilter = document.getElementById('search-filter');
+
+            searchInput.addEventListener('keyup', performSearch);
+
+            function performSearch() {
+                const searchValue = searchInput.value.trim();
+                const searchFilterElement = Array.from(dynamicFiltersContainer.children).find(child => child.textContent.includes('Search :'));        
+                if (searchValue.length === 0) {
+                    if (walletCheckbox.checked) {
+                        walletCheckbox.click();
+                        walletCheckbox.click();
+                    } else if (sortAscendingCheckbox.checked) {
+                        unhide_anchor_tags();
+                        sortAscendingCheckbox.click();
+                        sortAscendingCheckbox.click();
+                    } else if (sortRarityCheckbox.checked) {
+                        unhide_anchor_tags();
+                        sortRarityCheckbox.click();
+                        sortRarityCheckbox.click();
+                    } else {
+                        unhide_anchor_tags();
+                        revertToOriginalOrder();
+                    }
+                    if (searchFilterElement) {
+                        dynamicFiltersContainer.removeChild(searchFilterElement);
+                    }
+                    count_update();
+                    clearClearAll();
+                    filter_count();
+                    return;
+                }
+
+                const editionToSearch = parseInt(searchValue, 10);
+                const galleryContainer = document.querySelector('.gallery');
+                const nftCards = galleryContainer.querySelectorAll('.nft-card');
+
+                let found = false;
+                nftCards.forEach((card) => {
+                    const key = parseInt(card.getAttribute('data-edition'), 10);
+                    if (key === editionToSearch) {
+                        if (walletCheckbox.checked) {
+                            // If wallet checkbox is checked, check if the item is in the wallet
+                            const inWallet = walletData_get.keys_.includes(key);
+                            if (inWallet) {
+                                card.closest('a').style.display = 'block';
+                                found = true;
+                            } else {
+                                card.closest('a').style.display = 'none';
+                            }
+                        } else {
+                            // If wallet checkbox is unchecked, show all matching items
+                            card.closest('a').style.display = 'block';
+                            found = true;
+                        }
+                    } else {
+                        card.closest('a').style.display = 'none';
+                    }
+                })
+
+                if (!found) {
+                    alert(`Invalid Edition number`);
+                    if (searchFilterElement) {
+                        dynamicFiltersContainer.removeChild(searchFilterElement);
+                    }
+                    addFilterElement('Search : Invalid Edition Ⓧ');
+                    clearAll.style.display = 'block';
+                } else {
+                    if (searchFilterElement) {
+                        dynamicFiltersContainer.removeChild(searchFilterElement);
+                    }
+                    addFilterElement(`Search : ${editionToSearch} Ⓧ`);
+                    clearAll.style.display = 'block';
+                }
+                count_update();
+                filter_count();
+            }
+
+            function handleFilterClick(event) {
+                const targetElement = event.target;
+                if (targetElement.tagName === 'SPAN') {
+                const content = targetElement.textContent;
+                if (content.startsWith('Background')) {
+                    const backgroundValue_2 = content.split(':')[1].trim();
+                    let backgroundValue= backgroundValue_2.slice(0, -2);
+                    const backgroundCheckbox = Array.from(backgroundCheckboxes).find(checkbox => checkbox.value === backgroundValue);
+                    if (backgroundCheckbox) {
+                    backgroundCheckbox.checked = !backgroundCheckbox.checked;
+                    handleFilterChange();
+                    }
+                } else if (content.startsWith('Hat')) {
+                    const hatValue_2 = content.split(':')[1].trim();
+                    let hatValue= hatValue_2.slice(0, -2);
+                    const hatCheckbox = Array.from(hatCheckboxes).find(checkbox => checkbox.value === hatValue);
+                    if (hatCheckbox) {
+                    hatCheckbox.checked = !hatCheckbox.checked;
+                    handleFilterChange();
+                    }
+                } else if (content.startsWith('Mouth')) {
+                    const mouthValue_2 = content.split(':')[1].trim();
+                    let mouthValue= mouthValue_2.slice(0, -2);
+                    const mouthCheckbox = Array.from(mouthCheckboxes).find(checkbox => checkbox.value === mouthValue);
+                    if (mouthCheckbox) {
+                    mouthCheckbox.checked = !mouthCheckbox.checked;
+                    handleFilterChange();
+                    }
+                } else if (content === 'Content : My Items Ⓧ') {
+                    walletCheckbox.click();
+                    handleFilterChange();
+                } else if (content === 'Sort By : Ascending Ⓧ') {
+                    sortAscendingCheckbox.click();
+                    handleFilterChange();
+                } else if (content === 'Sort By : Rarity of traits Ⓧ') {
+                    sortRarityCheckbox.click();
+                    handleFilterChange();
+                } else if (content.startsWith('Search')){
+                    searchInput.value = "";
+                    performSearch();
+                    handleFilterChange();
+                }
+                targetElement.parentNode.removeChild(targetElement);
+                }
+            }
+
+            clearAll.addEventListener('click', funcClearAll);
+
+            function funcClearAll(event){
+                for (let i = 0; i < backgroundCheckboxes.length; i++) {
+                    if(backgroundCheckboxes[i].checked === true){
+                        backgroundCheckboxes[i].click();
+                    }
+                }                
+                for (let i = 0; i < mouthCheckboxes.length; i++) {
+                    if(mouthCheckboxes[i].checked === true){
+                        mouthCheckboxes[i].click();
+                    }
+                }       
+                for (let i = 0; i < hatCheckboxes.length; i++) {
+                    if(hatCheckboxes[i].checked === true){
+                        hatCheckboxes[i].click();
+                    }
+                }       
+                if(walletCheckbox.checked === true){
+                    walletCheckbox.click();
+                }
+                if(sortAscendingCheckbox.checked === true){
+                    sortAscendingCheckbox.click();
+                }
+                if(sortRarityCheckbox.checked === true){
+                    sortRarityCheckbox.click();
+                }              
+                const searchValue = searchInput.value.trim();
+
+                if (searchValue.length !== 0) {                
+                    searchInput.value = "";
+                    performSearch();
+                    handleFilterChange();
+                }                    
+                clearAll.style.display = 'none';
+            }
+
+            function clearClearAll(){
+                let count = 0;
+                for (let i = 0; i < backgroundCheckboxes.length; i++) {
+                    if(backgroundCheckboxes[i].checked === true){
+                        count++;
+                    }
+                }                
+                for (let i = 0; i < mouthCheckboxes.length; i++) {
+                    if(mouthCheckboxes[i].checked === true){
+                        count++;
+                    }
+                }       
+                for (let i = 0; i < hatCheckboxes.length; i++) {
+                    if(hatCheckboxes[i].checked === true){
+                        count++;
+                    }
+                }       
+                if(walletCheckbox.checked === true){
+                    count++;
+                }
+                if(sortAscendingCheckbox.checked === true){
+                    count++;
+                }
+                if(sortRarityCheckbox.checked === true){
+                    count++;
+                }              
+                const searchValue = searchInput.value.trim();
+
+                if (searchValue.length !== 0) { 
+                    count++;
+                }                    
+                if(count === 0){
+                    clearAll.style.display = 'none';
+                }
+            }
+
+            function filter_count(){
+                let count = 0;
+                for (let i = 0; i < backgroundCheckboxes.length; i++) {
+                    if(backgroundCheckboxes[i].checked === true){
+                        count++;
+                    }
+                }                
+                for (let i = 0; i < mouthCheckboxes.length; i++) {
+                    if(mouthCheckboxes[i].checked === true){
+                        count++;
+                    }
+                }       
+                for (let i = 0; i < hatCheckboxes.length; i++) {
+                    if(hatCheckboxes[i].checked === true){
+                        count++;
+                    }
+                }       
+                if(walletCheckbox.checked === true){
+                    count++;
+                }
+                if(sortAscendingCheckbox.checked === true){
+                    count++;
+                }
+                if(sortRarityCheckbox.checked === true){
+                    count++;
+                }              
+                const searchValue = searchInput.value.trim();
+
+                if (searchValue.length !== 0) {                
+                    count++;
+                }                    
+                filterCount.textContent = count;
+            }
+      });
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

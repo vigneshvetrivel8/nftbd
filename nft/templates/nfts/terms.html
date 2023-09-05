@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+
+    p{
+      margin-left: 4%;
+      margin-right: 4%;
+      font-size: medium;
+    }
+
+    h4{
+      margin-left: 4%;
+      margin-right: 4%;
+      font-size: large;
+    }
+    
+    h1 {
+      text-align: center;
+      margin: 30px 0;
+      color: #007BFF;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: rgba(248, 248, 248, 0.95); 
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.1); 
+    }
+
+    .navbar.fixed-top {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-nav .nav-item {
+        margin-right: 15px; 
+    }    
+  </style>
+</head>
+
+<body style="background-color: silver;">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Bore Dog NFTs</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'gallery' %}">Gallery</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'stats' %}">Stats</a>
+                </li>
+                <li class="nav-item dropdown"> 
+                  <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="galleryDropdown">
+                    <a class="dropdown-item" href="https://twitter.com/Bdognfts" target="_blank" style="text-decoration: none;color: inherit;"><b>Twitter</b></a>
+                    <a class="dropdown-item" href="https://www.instagram.com/boredogofficial/" target="_blank" style="text-decoration: none;color: inherit;"><b>Instagram</b></a>
+                    <a class="dropdown-item" href="https://opensea.io/collection/bore-dog" target="_blank" style="text-decoration: none;color: inherit;"><b>Opensea</b></a>
+                    <a class="dropdown-item" href="https://polygonscan.com/token/0x070f62778e939927ef99d330e590165f176fdf16" target="_blank" style="text-decoration: none;color: inherit;"><b>Polygonscan</b></a>              
+                    <a class="dropdown-item" href="{% url 'terms' %}" style="text-decoration: none;color: inherit;"><b>Terms & Conditions</b></a>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <button id="connect-button" class="btn btn-secondary mb-2"></button>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+
+  <input type="hidden" id="current_owner" value="{{ current_owner }}">
+  <form id="history-form" action="{% url 'save_history' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="history-f" id="history-f">
+    <button type="submit" style="display: none;"></button>
+  </form>
+
+      
+    <h1 style="text-align: center; padding-top: 50px;">TERMS AND CONDITIONS</h1>
+
+    <h4>Acceptance of the Terms of Use</h4>
+    <p>At Bore Dog(the “Company” or “we” or “us”), we're committed to providing you with a valuable and engaging online experience. 
+        Our Terms and Conditions page outlines the guidelines and expectations that govern your use of our website. 
+        These terms are designed to ensure a secure, respectful, and informative environment for all users. 
+        By accessing and using our website, you acknowledge and agree to adhere to these terms, which are in place to 
+        protect both you and us. We encourage you to read through this page carefully to understand your rights, 
+        responsibilities, and the framework within which our platform operates. Your continued use of our website 
+        signifies your acceptance of these terms, and we appreciate your collaboration in maintaining a positive 
+        online community.</p>
+        
+
+    <h4>Information Published on this Website</h4>
+    <p>The content provided on this website is intended solely for general informational purposes. It is 
+    essential to understand that the material presented on this platform should not be construed as legal 
+    advice, business advice, or any form of advice upon which you should solely rely. The use of the 
+    information on this website is at your own discretion and risk. We strongly recommend seeking more specific 
+    and professional guidance before making any decisions or taking actions based on the content displayed on 
+    this website.</p>
+    <p>The content on this website is not designed to replace the insights and expertise of qualified professionals. 
+        Prior to initiating any action or refraining from any action, it is imperative that you seek advice tailored to 
+        your individual circumstances. Relying solely on the content published here may lead to misunderstandings or 
+        misinterpretations that could affect the outcomes of your choices.</p>
+    <p>It is important to highlight that the website and its administrators, contributors, or affiliated individuals 
+        bear no responsibility for the consequences arising from your actions, decisions, or lack thereof, based on the 
+        information available on this website. We do not assume liability for any damages, losses, or adverse outcomes 
+        that might arise from your reliance on the content of this website.</p>
+    <p>In conclusion, the content on this website serves as a general resource and should not be considered a 
+        substitute for professional advice. Your use of this website constitutes acknowledgment and understanding 
+        of these terms, and you agree that any actions you take based on the information presented here are undertaken 
+        entirely at your own risk.</p>
+
+
+    <h4>Risks Related to Usage</h4>
+    <p>When utilizing this website, it is crucial to be aware of potential risks and acknowledge that the website and 
+        its administrators cannot be held responsible for any losses or damages incurred. While we strive to provide a 
+        secure and reliable platform, certain risks are inherent in the usage of digital services, particularly in the 
+        realm of blockchain and online interactions. By using this website, you accept and understand the following 
+        potential risks:</p>
+    <p>Forgotten Passwords: The website will not be held liable for any consequences resulting from forgotten passwords. 
+    It is your responsibility to maintain the confidentiality and security of your login credentials. 
+    Should you misplace or forget your password, you may lose access to your account and the associated assets.</p>
+    <p>Deletion or Corruption of Wallets: The website does not assume responsibility for any accidental deletion or 
+    corruption of cryptocurrency wallets. Safeguarding your wallet information, such as private keys or recovery 
+    phrases, is vital to prevent the permanent loss of access to your digital assets.</p>
+
+    <p>Data Loss Due to Faulty or Damaged Storage Devices: It is important to recognize that data loss can occur due to 
+    hardware malfunctions, damaged storage devices, or other unforeseen technical issues. Backing up your wallet 
+    information and essential data is recommended to mitigate the potential impact of such incidents.</p>
+
+    <p>Unauthorized Access to User Wallets and/or Accounts: Despite our security measures, unauthorized individuals 
+    may attempt to gain access to user wallets or accounts. The website will take reasonable precautions to protect 
+    your data, but we cannot guarantee absolute immunity from unauthorized access attempts. Utilizing strong security 
+    practices is advised to enhance the protection of your account.</p>
+
+    <p>Cryptocurrency Market Volatility: The value of cryptocurrencies can be highly volatile, leading to substantial 
+    gains or losses within short periods. The website does not provide financial advice and is not responsible for 
+    any financial losses resulting from changes in the value of cryptocurrencies.</p>
+
+    <p>Regulatory and Legal Risks: Cryptocurrency regulations vary by jurisdiction and are subject to change. Engaging 
+    with cryptocurrencies and digital assets may involve legal and regulatory risks. Users are advised to stay informed 
+    about the legal status of cryptocurrencies in their respective regions.</p>
+
+    <p>Third-Party Services: This website may link to or integrate with third-party services, platforms, or websites. 
+    Any interactions with third-party entities are undertaken at your own risk, and the website is not accountable 
+    for their actions or security practices.</p>
+
+    <p>In summary, while we prioritize security and strive to provide a safe user experience, there are inherent risks 
+    associated with the usage of digital platforms, particularly those involving blockchain. By using this 
+    website, you acknowledge and accept these risks and agree that the website and its administrators cannot be held 
+    liable for any losses, damages, or adverse outcomes that may arise from your interactions with the platform. 
+    It is recommended that you exercise caution, adopt robust security practices, and seek professional advice when 
+    necessary.</p>
+
+
+    <h4>Investment Risks</h1>
+    <p>Investing in Bore Dog NFTs involves certain risks that you should carefully consider before making any investment 
+    decisions. It's important to be aware of the potential financial implications and uncertainties associated with 
+    investing in digital assets. We strongly advise you to conduct thorough research and consult with qualified 
+    financial advisors before proceeding with any investment in Bore Dog NFTs. By engaging in such investments, 
+    you acknowledge and accept the following risks:</p>
+    
+    <p>Loss of Capital: Investing in Bore Dog NFTs carries the risk of losing your invested capital. The value of NFTs 
+    can be volatile and unpredictable, and there is no guarantee of a positive return on your investment.</p>
+    
+    <p>Price Fluctuations: Prices of Bore Dog NFTs can experience significant and rapid fluctuations, both upward and 
+    downward. These price swings can occur over short or extended periods, potentially resulting in substantial gains 
+    or losses.</p>
+    
+    <p>Market Uncertainty: The market for NFTs is relatively new and evolving. It is subject to various factors, 
+    including market sentiment, demand and supply dynamics, technological developments, regulatory changes, and 
+    macroeconomic conditions. These factors can contribute to market uncertainty and impact the value of Bore Dog NFTs.</p>
+    
+    <p>Liquidity Risk: NFT markets may not always have consistent liquidity, meaning that it could be challenging to buy 
+    or sell Bore Dog NFTs at desired prices and volumes. Illiquidity can lead to difficulties in exiting your 
+    investment positions.</p>
+    
+    <p>Regulatory and Legal Risks: The regulatory landscape for NFTs and cryptocurrencies is evolving and could 
+    potentially impact the legality and trading of Bore Dog NFTs. Changes in regulations or government policies may 
+    affect the value and tradability of these assets.</p>
+    
+    <p>Technical Risks: Bore Dog NFTs are digital assets that rely on blockchain technology. Technical issues, such as 
+    network congestion, software bugs, or security vulnerabilities, could impact the functionality, security, or 
+    availability of these assets.</p>
+    
+    <p>Market Perception: The value of NFTs can be influenced by market perception, community sentiment, celebrity 
+    endorsements, and social media trends. Positive or negative developments in these areas can affect the perceived 
+    value of Bore Dog NFTs.</p>
+    
+    <p>Limited Information: Comprehensive information about the underlying factors affecting the value of Bore Dog NFTs 
+    may not always be readily available. Lack of complete information could impact your ability to make informed 
+    investment decisions.</p>
+    
+    <p>No Guaranteed Returns: There is no assurance that the investment in Bore Dog NFTs will result in profits. 
+    The value of NFTs can be highly speculative, and past performance is not indicative of future results.</p>
+    
+    <p>Diversification Considerations: Investing in Bore Dog NFTs should be approached with caution and as part of a 
+    diversified investment strategy. Relying solely on NFT investments could expose you to higher levels of risk.</p>
+    
+    <p>In summary, investing in Bore Dog NFTs involves substantial risks, and potential investors should exercise caution 
+    and diligence. It is imperative to fully understand the risks involved, assess your risk tolerance, and seek 
+    guidance from financial professionals before committing capital. The decision to invest in Bore Dog NFTs should 
+    be based on a thorough evaluation of the associated risks and the potential for both gains and losses.</p>
+
+
+    <h4>Risk of Errors, Bugs, and Downtime</h4>
+    <p>When using this website, it's important to be aware of potential technical issues and disruptions that can 
+    affect its functionality, availability, and performance. By accessing and using this website, you acknowledge and 
+    accept the following risks:</p>
+    
+    <p>Bugs, Errors, and Defects: The website may contain coding bugs, errors in programming, or other defects that 
+    could impact its performance and user experience. These issues may manifest as unexpected behaviors, incorrect 
+    information display, or malfunctioning features. Despite efforts to ensure quality, such technical glitches are 
+    an inherent possibility in any complex software system.</p>
+    
+    <p>Improper Functionality: Due to the presence of bugs or other technical anomalies, the website may not function as 
+    intended. Features, buttons, or links might not work correctly, and certain functionalities may be unavailable or 
+    hindered.</p>
+    
+    <p>Periods of Downtime: The website may experience periods of downtime or unavailability. This can occur due to 
+    maintenance activities, server issues, hosting problems, or other technical reasons. During these periods, you 
+    may not be able to access the website or its services.</p>
+    
+    <p>Unannounced Modifications: The website's design, features, and functionality may change at any time, with or 
+    without prior notice. Updates, upgrades, or modifications to the website's infrastructure or user interface may 
+    occur, potentially affecting your experience and interactions.</p>
+    
+    <p>Release of Subsequent Versions: The website may undergo updates or releases of subsequent versions. While these 
+    updates may introduce new features or improvements, they can also introduce new bugs or compatibility issues that 
+    could impact your usage.</p>
+    
+    <p>Data Integrity and Loss: Technical issues such as errors, bugs, or downtime may lead to data integrity concerns. 
+    This could include incorrect data display, loss of data, or unintended data manipulation.</p>
+    
+    <p>User Experience Variability: Due to technical issues, your experience on the website may vary. 
+    Factors like browser compatibility, device limitations, and network connectivity can influence how the website 
+    performs for individual users.</p>
+    
+    <p>Mitigation Measures: The website's operators may work to identify and rectify bugs and issues. However, there is 
+    no guarantee of immediate resolution or complete elimination of technical problems.</p>
+    
+    <p>It's important to approach the usage of this website with the understanding that technical imperfections 
+    and disruptions can occur. While efforts are made to provide a seamless and reliable experience, the inherent 
+    nature of software and technology introduces the possibility of errors and unforeseen challenges. 
+    Users are encouraged to exercise patience, maintain backups of important data, and report any issues encountered 
+    to the website's support team if applicable.</p>
+    
+
+    <h4>Links to Other Websites</h4>
+    <p>This website may include links to external websites for your convenience and reference. It's important to 
+    understand the implications of clicking on such links and accessing content from other sites. Here are key 
+    points to consider regarding the use of links on this website:</p>
+    
+    <p>Informational Purpose: Links to other websites are provided for informational purposes only. They are intended to 
+    offer additional resources, references, or context related to the content of this website.</p>
+    
+    <p>Limited Control: This website has no control over the content, design, or updates of external websites. The linked 
+    sites are managed and maintained by separate entities, and the operators of this website cannot guarantee the 
+    accuracy, reliability, or security of information provided on these external platforms.</p>
+    
+    <p>Loss or Damage: By following links to external websites, you acknowledge and accept that the operators of 
+    this website are not responsible for any loss, damage, or negative consequences that may arise from your 
+    use of those linked sites.</p>
+    
+    <p>Terms and Conditions, Privacy Policy: When you navigate to external websites through the provided links, you 
+    become subject to the terms and conditions, privacy policies, and practices of those sites. It is your 
+    responsibility to review and understand the policies and practices of any linked site before engaging 
+    with their content.</p>
+    
+    <p>Personal Information and Data: External websites may have their own data collection and privacy practices. 
+    Any personal information you provide or data you share with linked sites is subject to their respective 
+    privacy policies, and the operators of this website have no control over how your information is handled 
+    by those sites.</p>
+    
+    <p>Use at Your Own Risk: Accessing external websites through links on this website is at your own risk. 
+    You should exercise caution, verify the authenticity of the linked sites, and assess whether the content aligns 
+    with your interests or needs.</p>
+    
+    <p>Disclaimer: The operators of this website disclaim any liability for the content, actions, or consequences of 
+    external websites linked from this site. Your interactions with linked sites are independent of this website's 
+    responsibilities.</p>
+    
+    <p>It's important to approach external links with a critical and cautious mindset. While they can provide valuable 
+    information, users should be aware of the potential risks and implications associated with navigating to external 
+    platforms. Always prioritize your online safety and take the necessary precautions when interacting with content 
+    from linked websites.</p>
+
+
+    <h4>Security</h4>
+    <p>Protecting the security of this website is essential to ensure a safe and reliable user experience. 
+    By using this website, you agree to abide by certain security measures and guidelines to maintain the integrity 
+    and functionality of the platform. Here is an elaboration on the security provisions you are expected to adhere to:</p>
+    
+    <p>Service Disruption: You agree not to engage in activities that could disrupt, restrict, or disable the services 
+    provided by this website to its users. This includes refraining from any actions that could impair the availability 
+    or accessibility of the website to others.</p>
+    
+    <p>Monitoring Interference: It is important to avoid any actions that could disrupt the website operators' ability 
+    to monitor and manage the platform effectively. This encompasses refraining from activities that might hinder or 
+    obstruct the website administrators' ability to oversee user interactions and content.</p>
+    
+    <p>Malicious Content: You are strictly prohibited from introducing or transmitting any form of malicious software, 
+    viruses, trojan horses, worms, or other harmful materials that could compromise the security or functionality of 
+    the website or its users' devices. Such activities could lead to data breaches, information loss, or unauthorized 
+    access.</p>
+    
+    <p>Website Attacks: You agree not to engage in any attempts to compromise the security of the website, including but 
+    not limited to hacking, phishing, or launching distributed denial-of-service (DDoS) attacks. Any actions that seek 
+    to exploit vulnerabilities or gain unauthorized access to the website's systems are strictly prohibited.</p>
+    
+    <p>Interference with Functionality: Engaging in activities that attempt to interfere with the proper working and 
+    functionality of the website is prohibited. This includes actions that could disrupt the normal operation of the 
+    platform, alter its content, or undermine its performance.</p>
+    
+    <p>Unauthorized Access: You are prohibited from attempting to gain unauthorized access to any restricted areas of 
+    the website, user accounts, or any other part of the platform that you are not explicitly granted access to. </p>
+       
+    <p>Legal Consequences: Violating the security provisions outlined here could result in legal consequences and may 
+    lead to actions being taken against you. The operators of this website reserve the right to take appropriate 
+    measures, including legal action, to address security breaches or unauthorized activities.</p>
+    
+    <p>By agreeing to these security provisions, you contribute to creating a secure and trustworthy environment for all 
+    users of the website. Your adherence to these guidelines helps protect the platform from potential threats and 
+    ensures a positive experience for everyone involved.</p>
+
+
+    <h4>Warranty Disclaimer</h4>
+    <p>Your use of this website and the content it provides is subject to certain disclaimers and limitations. 
+    Please carefully read and understand the following warranty disclaimer:</p>
+
+    <p>Use at Your Own Risk: By accessing and using this website, you acknowledge and agree that you do so at your 
+    own risk. The website's content, features, and items are provided to users "as is" and "as available".</p>
+
+    <p>No Warranties: The website is provided without any warranties of any kind, whether express or implied. This 
+    includes, but is not limited to, warranties of merchantability, fitness for a particular purpose, non-infringement, 
+    or accuracy of information.</p>
+
+    <p>Content and Data: We make no warranties regarding the accuracy, completeness, or reliability of any content or data 
+    provided on the website. Any information obtained from or through the website should be used at your 
+    own discretion and judgment.</p>
+
+    <p>Destructive Code: While we take measures to maintain the security and integrity of the website, we cannot guarantee 
+    that the website will be free from destructive or harmful code, including, but not limited to viruses, malware, or 
+    other potentially damaging elements. Users are advised to implement their own security measures and precautions.</p>
+
+    <p>Third-Party Content: The website may contain links to third-party websites, content, or services. We do not endorse 
+    or warrant the accuracy, reliability, or safety of such third-party content. Your interactions with third-party 
+    websites or services are at your own risk and subject to their respective terms and policies.</p>
+
+    <p>Uninterrupted Access: We strive to provide a reliable and accessible website, but we do not guarantee uninterrupted 
+    or error-free access to the website. Periods of downtime, maintenance, and technical issues may occur without prior 
+    notice.</p>
+
+    <p>Changes and Modifications: The website may be subject to changes, updates, and modifications at any time, 
+    with or without notice. We reserve the right to alter the website's features, design, content, and availability as 
+    needed.</p>
+
+    <p>Using this website comes with risks, and we don't provide any warranties or guarantees. The content is presented 
+    "as is," and we can't ensure its accuracy or safety. We can't guarantee uninterrupted access, and the website may 
+    change over time. By using the website, you accept these terms and the potential uncertainties of online activities.</p>
+
+    <h4>Limitation of Liability</h4>
+    <p>Your use of this website signifies your understanding and acceptance of the following limitations of liability:</p>
+
+    <p>No Responsibility for Linked Websites: We shall not be held liable for any damages, whether direct, indirect, 
+    special, incidental, consequential, or punitive, arising from or in connection with your use or inability to use 
+    any websites linked to or from our website. This includes damages related to the content on such linked websites, 
+    as well as services or items obtained through them.</p>
+    
+    <p>Wide Range of Damages: Under no circumstances shall Bore Dog be liable for personal injury, pain and suffering, 
+    emotional distress, loss of revenue, loss of profits, loss of use, or loss of goodwill resulting from your use of 
+    this website, the linked websites, their content, or services obtained from them. This applies to any type of 
+    damages, including direct, indirect, special, incidental, consequential, or punitive damages.</p>
+    
+    <p>Inaccuracies and Reliance: Bore Dog is not responsible for any inaccuracies, errors, or omissions present in the 
+    contents available on this website. Your reliance on any such materials is at your own risk, and Bore Dog shall 
+    not be liable for any resulting loss or damage.</p>
+    
+    <p>By accessing and using this website, you agree to release Bore Dog from any liability related to the matters 
+    discussed herein. It is recommended that you exercise caution and discretion while interacting with linked 
+    websites,this website and all contents.</p>
+
+
+    <h4>Modifications to Terms and Conditions and the Website</h4>
+    <p>We strive to provide you with the best possible experience while using our website. As part of our commitment 
+    to transparency and ongoing improvement, please take note of the following details regarding modifications to 
+    these Terms and Conditions and changes to the website:</p>
+
+    <p>Updated Version Availability: The most current version of these Terms and Conditions will always be accessible 
+    and prominently displayed on our website. It is recommended that you visit this page periodically to review the 
+    terms and ensure you are familiar with any updates or changes.</p>
+
+    <p>Right to Modify: We reserve the right, at our sole discretion, to modify, amend, or replace these Terms and 
+    Conditions at any time and without prior notice. The modifications may pertain to any aspect of the terms, 
+    including, but not limited to, provisions related to liability, user obligations, disclaimers, and privacy 
+    policies.</p>
+
+    <p>Obligation to Stay Informed: It is your responsibility to stay informed about any modifications to these Terms 
+    and Conditions. By continuing to use our website after any changes have been made, you indicate your acceptance 
+    of the updated terms. Failure to review the revised terms does not exempt you from complying with them.</p>
+
+    <p>Effect of Continued Use: Your continued use of the website following the implementation of any modifications 
+    constitutes your express consent and agreement to abide by the revised Terms and Conditions. If you do not 
+    agree with the updated terms, you should refrain from using the website.</p>
+
+    <p>Frequency of Review: We encourage you to periodically review these Terms and Conditions to ensure that you are 
+    aware of any changes. We understand that the nature of online platforms may necessitate updates from time to time, 
+    and we want to ensure that you are well-informed about our practices.</p>
+
+    <p>Effective Date: Any modifications or updates to these Terms and Conditions will become effective immediately 
+    upon their posting on the website.</p>
+
+    <p>By using our website, you acknowledge and accept that it is your responsibility to stay informed about changes 
+    to these Terms and Conditions. Your continued use of the website after modifications have been implemented 
+    signifies your understanding of and agreement to the revised terms.</p>
+
+
+    <h4>Updates to Website Content and Changes to Website Availability</h4>
+    <p>At Bore Dog, we are committed to providing you with valuable and accurate information through our website. 
+    It's important to understand the dynamics of our content and the potential changes to the website itself. 
+    Here's a detailed explanation:</p>
+
+    <p>Dynamic Content: The content presented on our website is intended to provide general information and insights. 
+    While we strive to maintain accuracy and relevance, please be aware that the content may change over time. 
+    Updates could include new information, modifications, enhancements, or clarifications to existing material.</p>
+
+    <p>Completeness and Timeliness: Our aim is to offer you a comprehensive resource, but it's important to note that 
+    the content on the website might not always be complete or up-to-date. Factors such as emerging trends, evolving 
+    technologies, and industry developments may necessitate updates that occur progressively.</p>
+
+    <p>Flexibility in Website Structure: The structure, layout, and features of the website are designed to enhance 
+    user experience. However, we retain the right to make changes, enhancements, or modifications to the website's 
+    design, interface, and functionality. This could involve introducing new sections, rearranging content, or 
+    optimizing features.</p>
+
+    <p>Withdrawal or Termination: Bore Dog reserves the exclusive right, at our sole discretion, to make decisions 
+    regarding the continuity of the website. This includes the ability to change, withdraw, or terminate the website, 
+    either temporarily or permanently. Such decisions may occur without prior notice.</p>
+
+    <p>Commitment to User Experience: While we may make changes to the website, our primary goal is to ensure that 
+    your experience remains positive, informative, and engaging. Any adjustments are made with the intention of 
+    providing you with a seamless and valuable interaction with our platform.</p>
+
+    <p>Notification Practices: While we strive to maintain transparency, it's important to acknowledge that changes to 
+    the website's content or availability might not be accompanied by explicit notifications. Regular visitors 
+    are encouraged to periodically check the website for updates and changes.</p>
+
+    <p>Ensuring Your Usefulness: Despite the possibility of changes, we are dedicated to delivering meaningful and 
+    relevant content. Our team is committed to curating and updating information to enhance your understanding and 
+    engagement.</p>
+
+    <p>In summary, our website is a dynamic platform that may evolve over time. While we aim for accuracy and 
+    up-to-date information, changes and updates are inherent to online platforms. We retain the authority to 
+    manage the website's content and availability to ensure a positive user experience. Your continued use of 
+    the website reflects your acknowledgment and acceptance of these potential changes. If you have any questions 
+    or concerns, we encourage you to reach out to us for clarification. Your feedback is valuable as we strive to 
+    deliver a platform that meets your needs effectively.</p>
+
+
+    <h4>User Responsibilities and Conduct</h4>
+    <p>As a user of the Bore Dog website, we expect you to adhere to certain responsibilities and standards of conduct 
+    to ensure a respectful and secure online environment. Here's a detailed overview:</p>
+
+    <p>Responsible Use: You agree to use the website for lawful and legitimate purposes. Any use that violates applicable 
+    laws, regulations, or the rights of others is strictly prohibited.</p>
+
+    <p>Prohibited Activities: You must refrain from engaging in any activities that may harm the website, its 
+    functionality, or its users. This includes but is not limited to introducing viruses, hacking attempts, 
+    or any other malicious activities.</p>
+
+    <p>No Impersonation: You will not impersonate any person, entity, or organization while using the website. This 
+    includes misrepresenting your identity or affiliation in any way.</p>
+
+    <p>Privacy and Security: While using the website, you are responsible for maintaining the confidentiality of any 
+    login credentials or personal information. You must not engage in actions that 
+    compromise the security of your account.</p>
+
+    <p>Monitoring and Enforcement: Bore Dog reserves the right to monitor user activity and content on the website to 
+    ensure compliance with these terms and conditions. We may take appropriate actions, including suspension or 
+    termination of accounts, for violations.</p>
+
+    <p>No Unlawful Activities: You will not use the website for any illegal or unauthorized purposes. 
+    This includes engaging in fraudulent activities, or participating in 
+    activities that harm others.</p>
+
+    <p>By using this website, you agree to abide by these responsibilities and conduct guidelines. Your 
+    adherence to these standards contributes to a positive user experience and helps maintain a safe and 
+    respectful online community. Failure to comply with these guidelines may result in the suspension or 
+    termination of your account and access to the website.</p>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script>
+        const historyForm = document.getElementById('history-form');
+        const historyAddress = document.getElementById('history-f');
+
+
+        const walletDataJSON_get = localStorage.getItem('walletData');
+        const walletData_get = JSON.parse(walletDataJSON_get);
+        if (!walletData_get || walletData_get.connected === false) {
+          document.getElementById('connect-button').textContent = `Connect`;
+        } else{
+          document.getElementById('connect-button').textContent = `Disconnect`;
+        }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        (async function() {
+
+          document.getElementById("connect-button").addEventListener("click", connectMetamask);
+
+          async function connectMetamask() {
+            if (typeof ethereum !== "undefined") {
+                web3 = new Web3(ethereum);
+                try {
+                await ethereum.request({ method: "eth_requestAccounts" });
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask. Please try again.");
+                }
+            } else {
+                alert("Please install MetaMask.");
+            }
+
+            const accounts = await ethereum.enable();
+            const address = accounts[0];
+
+            const walletDataJSON_get = localStorage.getItem('walletData');
+            const walletData_get = JSON.parse(walletDataJSON_get);
+
+            if (!walletData_get || walletData_get.connected === false) {
+                try {
+                console.log("Connected to MetaMask. Address:", address);
+                historyAddress.value = address;
+                historyForm.submit();
+                alert("Connected to MetaMask!");
+                document.getElementById('connect-button').textContent = `Disconnect`;
+                const walletItemsInput = document.getElementById('current_owner');
+                const wallet_data = JSON.parse(walletItemsInput.value);
+                const keysArray = Object.keys(wallet_data);
+                const valuesArray = Object.values(wallet_data);
+
+                const targetValue = address;
+                walletKeys = [];
+                for (const key in wallet_data) {
+                    if (wallet_data[key] === targetValue) {
+                    walletKeys.push(parseInt(key, 10));
+                    }
+                }
+                const walletData = {
+                  wallet_address: address,
+                  connected: true,
+                  keys_: walletKeys
+                };
+                const walletDataJSON = JSON.stringify(walletData);
+                localStorage.setItem('walletData', walletDataJSON);
+
+                console.log("Keys with target value:", walletKeys);
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask.");
+                }
+                } else {
+                    const walletData = {
+                      wallet_address: address,
+                      connected: false
+                    };
+                    const walletDataJSON = JSON.stringify(walletData);
+                    localStorage.setItem('walletData', walletDataJSON);
+                    alert("Wallet disconnected!");
+                    document.getElementById('connect-button').textContent = `Connect`;
+                }            
+            }
+          }) ();
+        });
+    </script>
+</body>
+
+</html>

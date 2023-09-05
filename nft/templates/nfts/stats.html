@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Stats</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+          .bargraph {
+              overflow-x: hidden;
+              width: 80vw;
+              height: 80vh;
+              max-width: 700px; 
+              max-height: 700px; 
+          }
+
+          .info-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            text-align: center;
+          }
+
+        .general-info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            width: calc(33.33% - 20px); 
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .info-item p {
+            margin: 0;
+        }
+
+        .info-item a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        @media (max-width: 700px) {
+            .info-item {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+      body {
+        margin: 0; 
+        padding: 10vh; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh; 
+        overflow-x: hidden;
+      }
+      
+      .pie {
+        width: 80vw;
+        height: 80vw;
+        max-width: 700px; 
+        max-height: 700px; 
+      }
+
+      .table-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        max-width: 1200px; 
+        margin: 0 auto; 
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .navbar {
+        background-color: rgba(255, 255, 255, 0.1); 
+      }
+
+      .navbar.fixed-top {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-nav .nav-item {
+          margin-right: 15px; 
+      }    
+
+      .table-wrapper {
+            flex: 1; 
+            margin-right: 20px; 
+        }
+
+      @media (max-width: 767px) {
+          .table-wrapper {
+          flex-basis: 100%; 
+          margin-right: 0; 
+          }
+      }
+    </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Bore Dog NFTs</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'gallery' %}">Gallery</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'stats' %}">Stats</a>
+                </li>
+                <li class="nav-item dropdown"> 
+                  <a class="nav-link dropdown-toggle" href="#" id="galleryDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="galleryDropdown">
+                    <a class="dropdown-item" href="https://twitter.com/Bdognfts" target="_blank" style="text-decoration: none;color: inherit;"><b>Twitter</b></a>
+                    <a class="dropdown-item" href="https://www.instagram.com/boredogofficial/" target="_blank" style="text-decoration: none;color: inherit;"><b>Instagram</b></a>
+                    <a class="dropdown-item" href="https://opensea.io/collection/bore-dog" target="_blank" style="text-decoration: none;color: inherit;"><b>Opensea</b></a>
+                    <a class="dropdown-item" href="https://polygonscan.com/token/0x070f62778e939927ef99d330e590165f176fdf16" target="_blank" style="text-decoration: none;color: inherit;"><b>Polygonscan</b></a>
+                    <a class="dropdown-item" href="{% url 'terms' %}" style="text-decoration: none;color: inherit;"><b>Terms & Conditions</b></a>              
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <button id="connect-button" class="btn btn-secondary mb-2"></button>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+  <input type="hidden" id="current_owner" value="{{ current_owner }}">
+  <form id="history-form" action="{% url 'save_history' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="history-f" id="history-f">
+    <button type="submit" style="display: none;"></button>
+  </form>
+  <input type="hidden" id="top_25" value="{{ top_25 }}">
+  <input type="hidden" id="time_count" value="{{ time_count }}">
+  <input type="hidden" id="items_count" value="{{ items_count }}">
+
+
+  <div class="info-box">
+    <h2>General Info</h2>
+    <div class="general-info-container">
+        <div class="info-item">
+            <p>Total Items: 1050</p>
+        </div>
+        <div class="info-item">
+            <p>Unique Owners: {{ owners_count }}</p>
+        </div>
+        <div class="info-item">
+            <p>Chain: Polygon</p>
+        </div>
+        <div class="info-item">
+            <a href="/" id="filter-link-h" style="text-decoration: none;color: inherit;">
+                <p>Rarest Hat: <b>Pirate hat_eye combo </b>(22 items)</p>
+                <form id="filter-form-h" action="{% url 'gallery' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="traith" value="Hats: pirate hat_eye combo">
+                    <button type="submit" style="display: none;"></button>
+                </form>
+            </a>
+        </div>
+        <div class="info-item">
+            <a href="/" id="filter-link-b" style="text-decoration: none;color: inherit;">
+                <p>Rarest BackGround: <b>Green </b>(18 items)</p>
+                <form id="filter-form-b" action="{% url 'gallery' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="traitb" value="Backgrounds: green">
+                    <button type="submit" style="display: none;"></button>
+                </form>
+            </a>
+        </div>
+        <div class="info-item">
+            <a href="/" id="filter-link-m" style="text-decoration: none;color: inherit;">
+                <p>Rarest Mouth: <b>Laughing </b>(22 items)</p>
+                <form id="filter-form-m" action="{% url 'gallery' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="traitm" value="Mouths: laughing">
+                    <button type="submit" style="display: none;"></button>
+                </form>
+            </a>
+        </div>
+        <div class="info-item">
+            <p>Created By: <a href="https://polygonscan.com/address/0xe563642fa2c850a96d1008c6b3023e7caa6c4a84" target="_blank" style="text-decoration: none;color: inherit;"><b>0xe...</b></a></p>
+        </div>
+        <div class="info-item">
+            <p>Most items per wallet: {{ max_items_per_wallet }}</p>
+        </div>
+    </div>
+  </div>
+  
+
+  <h1>Owner's Distribution</h1>
+  <div class="pie">
+    <canvas id="pieChart"></canvas>
+  </div>
+  
+  <div class="table-container">
+    <div class="table-wrapper" name="table1">
+      <h2 style="text-align: center;">Owner's Distribution Table</h2>
+      <table id="dataTable" style="margin: 0 auto; text-align: center;">
+        <tr>
+          <th>No.of Items</th>
+          <th>No.of collectors</th>
+          <th>Percentage</th>
+        </tr>
+      </table>
+    </div>
+
+    <div name="table2" style="margin: 0 auto; text-align: center;">
+      <h2>Top collectors</h2>
+      <div style="height: 193px; overflow-y: scroll;">
+        <table id="collectorsTable">
+          <tr>
+            <th></th>
+            <th>Collector's Address</th>
+            <th>Items Owned</th>
+            <th>Percentage</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h1>Activities</h1>
+  <div class="bargraph">
+    <canvas id="barChart" class="bargraph"></canvas>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+<script>
+    const historyForm = document.getElementById('history-form');
+    const historyAddress = document.getElementById('history-f');
+
+    const walletDataJSON_get = localStorage.getItem('walletData');
+    const walletData_get = JSON.parse(walletDataJSON_get);
+
+    if (!walletData_get || walletData_get.connected === false) {
+      document.getElementById('connect-button').textContent = `Connect`;
+    } else{
+      document.getElementById('connect-button').textContent = `Disconnect`;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      var itemsCountInput = document.getElementById("items_count");
+      var itemsCountValue = itemsCountInput.value;
+    
+      var itemsCountData = JSON.parse(itemsCountValue);
+    
+      var labels = Object.keys(itemsCountData);
+      var values = Object.values(itemsCountData);
+    
+      var ctx = document.getElementById('pieChart').getContext('2d');
+      var pieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: [
+              '#FF6384',
+              '#48f542',
+              '#FFCE56',
+              '#8104e0',
+              '#0a0a0a',
+              '#36A2EB',
+              '#3d2a01'
+            ],
+            hoverBackgroundColor: [
+              '#FF6384',
+              '#48f542',
+              '#FFCE56',
+              '#8104e0',
+              '#0a0a0a',
+              '#36A2EB',
+              '#3d2a01'
+            ]
+          }]
+        },
+        options: {
+        }
+      });
+
+      var dataTable = document.getElementById("dataTable");
+
+      for (var item in itemsCountData) {
+        var count = itemsCountData[item];
+
+        var totalCount = 0;
+
+        for (var key in itemsCountData) {
+        totalCount += itemsCountData[key];
+        }
+
+        var percentage = ((count / totalCount) * 100).toFixed(1) + "%";
+
+        var row = dataTable.insertRow();
+        var itemCell = row.insertCell(0);
+        var countCell = row.insertCell(1);
+        var percentageCell = row.insertCell(2);
+
+        itemCell.innerHTML = item;
+        countCell.innerHTML = count;
+        percentageCell.innerHTML = percentage;
+      }
+
+      var top25Input = document.getElementById("top_25");
+      var top25Value = top25Input.value;
+
+      var top25Data = JSON.parse(top25Value);
+
+      var collectorsTable = document.getElementById("collectorsTable");
+      var sNo = 1;
+      for (var item in top25Data) {
+        var count = top25Data[item];
+        var percentage = ((count / 1050) * 100).toFixed(1) + "%";
+
+        var row = collectorsTable.insertRow();
+        var sNoCell = row.insertCell(0);
+        var itemCell = row.insertCell(1);
+        var countCell = row.insertCell(2);
+        var percentageCell = row.insertCell(3);
+
+        var link = document.createElement('a');
+        link.href = "/account/" + item.split(' ')[0]; 
+
+        link.textContent = item;
+
+        link.style.textDecoration = "none";
+        link.style.color = "inherit";
+
+        itemCell.appendChild(link);
+
+        itemCell.style.color = "blue";
+        link.style.fontWeight = "bold";
+        link.textContent = item.slice(0, 2) + '....' + item.slice(-4);
+
+        sNoCell.textContent = sNo + ".";
+        countCell.textContent = count;
+        percentageCell.textContent = percentage;
+
+        sNo++;
+
+      }
+
+      var timeCountInput = document.getElementById("time_count");
+      var timeCountValue = timeCountInput.value;
+
+      var timeCountData = JSON.parse(timeCountValue);
+
+      var labels = Object.keys(timeCountData);
+      var values = Object.values(timeCountData);
+      console.log(values);
+
+      var b = values.map(function(value) {
+        if (value < 1000) {
+            return 1;
+        } else if (value >= 1000 && value <= 1250) {
+            return 2;
+        } else if (value > 1250 && value <= 1500) {
+            return 3;
+        } else {
+            return 4;
+        }
+      });
+
+      console.log(b)
+
+      var yCategories = ['0','<1000','1000-1250','1251-1500','>1500'];
+
+      var ctx = document.getElementById('barChart').getContext('2d');
+      var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Count',
+            data: b,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+            responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 4, 
+        ticks: {
+          stepSize: 1,
+          callback: function(value, index, values) {
+            if (value >= 0 && value < yCategories.length) {
+              return yCategories[value];
+            } else {
+              return '';
+            }
+          }
+        }
+      }
+    },
+    plugins: {
+        tooltip: {
+            callbacks: {
+            label: function(context) {
+                var index = context.dataIndex;
+                if (index >= 0 && index < yCategories.length) {
+                    if(yCategories[b[index]] === '<1000'){
+                        return "less than 1000";
+                    } else {
+                        return values[index];
+                    }
+                } else {
+                return '';
+                }
+            }
+            }
+        }
+        }
+    }
+      });
+
+
+        const filterLinkb = document.getElementById('filter-link-b');
+        const filterFormb = document.getElementById('filter-form-b');
+        const filterLinkh = document.getElementById('filter-link-h');
+        const filterFormh = document.getElementById('filter-form-h');
+        const filterLinkm = document.getElementById('filter-link-m');
+        const filterFormm = document.getElementById('filter-form-m');
+
+
+        filterLinkb.addEventListener('click', (event) => {
+            event.preventDefault();
+            filterFormb.submit();
+        });
+
+        filterLinkh.addEventListener('click', (event) => {
+            event.preventDefault();
+            filterFormh.submit();
+        });
+
+        filterLinkm.addEventListener('click', (event) => {
+            event.preventDefault();
+            filterFormm.submit();
+        });
+
+        (async function() {
+
+          document.getElementById("connect-button").addEventListener("click", connectMetamask);
+
+          async function connectMetamask() {
+            if (typeof ethereum !== "undefined") {
+                web3 = new Web3(ethereum);
+                try {
+                await ethereum.request({ method: "eth_requestAccounts" });
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask. Please try again.");
+                }
+            } else {
+                alert("Please install MetaMask.");
+            }
+
+            const accounts = await ethereum.enable();
+            const address = accounts[0];
+
+            const walletDataJSON_get = localStorage.getItem('walletData');
+            const walletData_get = JSON.parse(walletDataJSON_get);
+
+            if (!walletData_get || walletData_get.connected === false) {
+                try {
+                console.log("Connected to MetaMask. Address:", address);
+                historyAddress.value = address;
+                historyForm.submit();
+                alert("Connected to MetaMask!");
+                document.getElementById('connect-button').textContent = `Disconnect`;
+                const walletItemsInput = document.getElementById('current_owner');
+                const wallet_data = JSON.parse(walletItemsInput.value);
+                const keysArray = Object.keys(wallet_data);
+                const valuesArray = Object.values(wallet_data);
+
+                const targetValue = address;
+                walletKeys = [];
+
+                for (const key in wallet_data) {
+                  if (wallet_data[key] === targetValue) {
+                  walletKeys.push(parseInt(key, 10));
+                  }
+                }
+                const walletData = {
+                  wallet_address: address,
+                  connected: true,
+                  keys_: walletKeys
+                };
+                const walletDataJSON = JSON.stringify(walletData);
+                localStorage.setItem('walletData', walletDataJSON);
+
+                console.log("Keys with target value:", walletKeys);
+                } catch (error) {
+                console.error(error);
+                alert("Error connecting to MetaMask.");
+                }
+                } else {
+                    const walletData = {
+                      wallet_address: address,
+                      connected: false
+                    };
+                    const walletDataJSON = JSON.stringify(walletData);
+                    localStorage.setItem('walletData', walletDataJSON);
+                    alert("Wallet disconnected!");
+                    document.getElementById('connect-button').textContent = `Connect`;
+                }            
+            }
+          }) ();
+    });
+</script>
+    
+</html>
