@@ -1,8 +1,7 @@
 ### Introduction
 
 This is a website of a nft collection in django. 
-This webpage has a gallery page which shows all the items in a random order(Best items are shown at the top), then we have a page for each item, a stats page and owner's page.
-
+This webpage has a gallery page which shows all the items in a random order(Best items are shown at the top), then we have a page for each item, a stats page and owner's page.  
 Visit: https://vicky6.pythonanywhere.com to view the website. (this is just a sample demonstration website and look of this website can be improved)
 
 This project is related to nft collection. So in order to make this website we need to have data related to transactions, info of each and every item, etc. As this collection involves 1050 items(and we may see 10000 or more items in many other collections) it is impossible to manually enter the data related to each item involved or each transactions involved. 
@@ -150,7 +149,7 @@ First let us locate some parts of code:
 
 -------------------------------------------------------------------------------------------------------------------    
 
-(possibly in lines 318-324 or nearby in views.py)  
+(possibly in lines 320-326 or nearby in views.py)  
 functions part 1:  
 load_transactions_database(29936472,29936472)  
 load_transactions_database(33131494,34247571)
@@ -161,7 +160,7 @@ print("completed feeding collection and transaction data")
 
 -------------------------------------------------------------------------------------------------------------------
 
-(possibly in lines 337-361 or nearby in views.py)  
+(possibly in lines 340-364 or nearby in views.py)  
 part 1:  
 unique_backgrounds = Collection.objects.values_list('Background', flat=True).distinct()  
 background_list = list(unique_backgrounds)  
@@ -188,7 +187,7 @@ for mouth in mouth_list:
 
 -------------------------------------------------------------------------------------------------------------------
 
-(possibly in lines 467-470 or nearby in views.py)  
+(possibly in lines 469-472 or nearby in views.py)  
 functions part 2:  
 load_rarity()  
 load_item_type()  
@@ -196,7 +195,7 @@ print("completed feeding data")
 
 -------------------------------------------------------------------------------------------------------------------
 
-(possibly in lines 476-483 or nearby in views.py)  
+(possibly in lines 479-486 or nearby in views.py)  
 part 2:  
 items_type_1 = Itemtype.objects.filter(type_name="Type_1")  
 list_of_tuples_1 = [(item.Name, item.type_name) for item in items_type_1]  
@@ -208,7 +207,7 @@ dict_2 = dict(list_of_tuples_2)
 
 -------------------------------------------------------------------------------------------------------------------
 
-(possibly in lines 510-517 or nearby in views.py)  
+(possibly in lines 513-520 or nearby in views.py)  
 part 3:  
 rarity_objects = Rarity.objects.all().order_by('Rarity_number')  
 list_of_rarity_objects = [(item.Name, item.Rarity_number) for item in rarity_objects]  
@@ -224,9 +223,10 @@ These 5 sections are located:
 functions part 1, part 1, functions part 2, part 2,part 3.
 
 
-Now if we want to see the webpage with existing database, then we may uncomment the code in part 1, part 2 and part 3. And run "python manage.py runserver" to view the webpage.
+Now if we want to see the webpage with existing database, then run "python manage.py runserver" to view the webpage.
 
 If we want to load the database from scratch and then run the website, steps given below can be followed:  
+* comment part 1, part 2, part 3.
 * first migrate to zero.  
 * Then makemigrations.  
 * Then uncomment all 5 parts(functions part 1, part 1, functions part 2, part 2,part 3).  
